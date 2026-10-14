@@ -37,7 +37,9 @@ AI가 마음대로 달리지 않도록 **방향과 한계를 정해 주는 장�
 | `CLAUDE.md` | 프로젝트 전체 규칙(기술 스택, 꼭 지킬 규칙, 명령어) | ✅ 예, 맨 처음에 채움 |
 | `.claude/commands/harness.md` | `/harness` 명령 — AI가 문서를 읽고 → 논의하고 → 단계를 설계하고 → 실행하는 작업 흐름 | ❌ 보통 그대로 둠 |
 | `.claude/commands/review.md` | `/review` 명령 — 바뀐 코드가 규칙을 지켰는지 표로 점검 | ❌ 보통 그대로 둠 |
-| `.claude/settings.json` | 훅(자동 검사) 설정. ① AI가 일을 마칠 때 `lint → build → test` 실행 ② `rm -rf`, `git push --force` 같은 위험한 명령 차단 | △ 명령어가 npm이 아니면 수정 |
+| `.claude/settings.json` | 훅(자동 검사) 설정. ① AI가 일을 마칠 때 `package.json`이 있으면 `lint → build → test` 실행(없으면 그냥 통과) ② `rm -rf`, `git push --force`, `git reset --hard` 같은 위험한 명령 차단 | △ 명령어가 npm이 아니면 수정 |
+| `.claude/hooks/` | 위 훅이 실제로 실행하는 파이썬 스크립트 (`stop_check.py`, `block_dangerous.py`) | △ 검사 명령을 바꿀 때만 |
+| `scripts/new-project.ps1` | 이 틀을 복사해 새 프로젝트를 만드는 스크립트 (4번 작업 순서 1단계) | ❌ 그대로 둠 |
 | `docs/PRD.md` | **무엇을** 만드나 (목표, 사용자, 핵심 기능, 안 만들 것) | ✅ 예 |
 | `docs/ARCHITECTURE.md` | **어떻게** 짜나 (폴더 구조, 데이터 흐름, 상태 관리) | ✅ 예 |
 | `docs/ADR.md` | **왜** 그렇게 정했나 (기술 선택의 이유와 포기한 것) | ✅ 예 |
@@ -62,7 +64,7 @@ AI가 마음대로 달리지 않도록 **방향과 한계를 정해 주는 장�
 | 3 | `docs/ARCHITECTURE.md` | 디렉토리 구조(예시는 Next.js 기준이니 내 것으로 교체) / 패턴 / 데이터 흐름 / 상태 관리 |
 | 4 | `docs/ADR.md` | 철학 한 줄 / ADR-001~003 각각의 결정·이유·트레이드오프 |
 | 5 | `docs/UI_GUIDE.md` | 디자인 원칙 3개 / 배경·텍스트·의미 색상 값 / 카드·버튼·입력창 스타일 / 레이아웃 / 글꼴 / 허용 애니메이션 / 아이콘 규칙 |
-| 6 | `.claude/settings.json` | (npm 프로젝트가 아니라면) Stop 훅의 `npm run lint && npm run build && npm run test`를 내 프로젝트 명령으로 교체 |
+| 6 | `.claude/hooks/stop_check.py` | (npm 프로젝트가 아니라면) `npm run lint/build/test` 부분을 내 프로젝트 검사 명령으로 교체 |
 
 빈칸이 남았는지 확인하는 방법 (Git Bash에서):
 
@@ -74,7 +76,13 @@ grep -rn "{" CLAUDE.md docs/
 
 ## 4. 작업 순서
 
-1. **이 저장소를 복사해서 새 프로젝트 폴더를 만듭니다.**
+1. **이 저장소를 복사해서 새 프로젝트 폴더를 만듭니다.** 이 폴더에서 PowerShell을 열고 아래처럼 입력하면 자동으로 됩니다.
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\new-project.ps1 my-app
+   ```
+   - `Documents\my-app` 폴더가 생기고, 이 틀의 git 기록은 빼고 **새 git 저장소**로 시작합니다.
+   - 같은 이름의 폴더가 이미 있으면 덮어쓰지 않고 멈춥니다.
+   - 끝나면 `cd $HOME\Documents\my-app` 으로 이동해서 2번부터 진행하세요.
 2. **3번 표의 빈칸을 모두 채웁니다.** (특히 `CLAUDE.md`와 `docs/PRD.md`는 필수)
 3. **빈칸을 채운 상태를 커밋합니다.**
    ```bash
@@ -115,14 +123,14 @@ grep -rn "{" CLAUDE.md docs/
 |---|------|------------------|---------------|
 | 1 | `{ }` 빈칸을 그대로 두고 실행 | AI가 "{프로젝트명}" 같은 글자를 진짜 규칙으로 읽고 엉뚱하게 만듦 | 실행 전에 `grep -rn "{" CLAUDE.md docs/`로 확인 |
 | 2 | `ARCHITECTURE.md`의 Next.js 예시 구조를 그대로 둠 | 파이썬 프로젝트인데 `src/app/` 같은 폴더가 생김 | 내 프로젝트의 실제 폴더 구조로 바꾸기 |
-| 3 | npm 프로젝트가 아닌데 `settings.json` 훅을 안 고침 | AI가 일을 마칠 때마다 `npm run ...` 실패 메시지가 뜸 | Stop 훅 명령을 내 프로젝트 명령으로 교체 |
+| 3 | npm 프로젝트가 아닌데 검사 명령을 안 고침 | `package.json`이 없으면 검사를 건너뛰어서, 자동 검사 없이 끝남 | `.claude/hooks/stop_check.py`를 내 프로젝트 검사 명령으로 교체 |
 | 4 | 한 단계(step)에 일을 너무 많이 몰아넣음 | AI가 중간에 헷갈리고 3번 재시도 끝에 `error` | 한 단계 = 한 모듈/한 기능만 |
 | 5 | 지시서에 "아까 말한 대로" 같은 표현을 씀 | 각 단계는 **새 AI 세션**에서 실행돼서 "아까"를 모름 | 필요한 정보는 지시서 안에 전부 적기 |
 | 6 | 완료 기준을 "잘 동작해야 한다"처럼 막연하게 씀 | 성공인지 실패인지 판단 못 함 | `npm test`처럼 **실제로 실행할 수 있는 명령**으로 적기 |
 | 7 | `error`/`blocked` 상태를 안 고치고 다시 실행 | 실행기가 바로 멈춤 | 원인 해결 → `status`를 `"pending"`으로 바꾼 뒤 재실행 |
 | 8 | 커밋 안 한 변경이 있는 채로 실행 | 브랜치 전환·자동 커밋에 내 작업이 섞임 | 실행 전에 `git status`가 깨끗한지 확인 |
 | 9 | Windows에서 `python3`를 그대로 입력 | "명령을 찾을 수 없음" | `python` 또는 `py`로 입력 |
-| 10 | Windows에서 한글 문서 때문에 `UnicodeDecodeError` | 실행기가 문서를 못 읽고 멈춤 | 문서는 UTF-8로 저장하고, PowerShell에서 `$env:PYTHONUTF8 = "1"` 입력 후 실행 |
+| 10 | Windows에서 한글 문서 때문에 `UnicodeDecodeError` | 실행기가 문서를 못 읽고 멈춤 | 실행기는 UTF-8로 읽도록 고쳐져 있으니, 문서를 UTF-8로 저장하기 (메모장: 다른 이름으로 저장 → 인코딩 UTF-8) |
 | 11 | 실행기가 AI를 **승인 없이** 돌린다는 걸 모름 | 실행 중 AI가 파일 수정·명령 실행을 묻지 않고 함 | 중요한 폴더에서 돌리지 말고, 반드시 git으로 관리되는 폴더에서 실행 |
 | 12 | `claude` 명령이 설치·로그인 안 된 상태 | 실행기가 첫 단계부터 실패 | 터미널에서 `claude --version`이 나오는지 먼저 확인 |
 
