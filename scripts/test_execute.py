@@ -433,7 +433,8 @@ class TestInvokeClaude:
             output = executor._invoke_claude(step, preamble)
 
         cmd = mock_run.call_args[0][0]
-        assert cmd[0].endswith("claude")
+        # Windows는 claude.EXE / claude.cmd 처럼 확장자가 붙으므로 이름만 비교
+        assert Path(cmd[0]).stem.lower() == "claude"
         assert "-p" in cmd
         assert "--dangerously-skip-permissions" in cmd
         assert "--output-format" in cmd
