@@ -1,12 +1,27 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git fetch:*)",
+      "Bash(git branch:*)",
+      "Bash(node --check:*)",
+      "Bash(node --test:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run build:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python scripts/execute.py:*)"
+    ],
     "deny": [
       "Bash(rm -rf:*)",
       "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
       "Read(./.env)",
-      "Read(./.env.local)",
-      "Read(./.env.production)"
+      "Read(./.env.*)"
     ]
   },
   "hooks": {
@@ -16,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_start.py\"",
+            "command": "python .claude/hooks/session_start.py",
             "timeout": 30
           }
         ]
@@ -28,7 +43,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/block_dangerous.py\""
+            "command": "python .claude/hooks/block_dangerous.py"
+          },
+          {
+            "type": "command",
+            "command": "python .claude/hooks/commit_guard.py"
           }
         ]
       },
@@ -37,7 +56,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret_guard.py\""
+            "command": "python .claude/hooks/secret_guard.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/syntax_check.py"
           }
         ]
       }
@@ -48,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop_check.py\""
+            "command": "python .claude/hooks/stop_check.py"
           }
         ]
       }

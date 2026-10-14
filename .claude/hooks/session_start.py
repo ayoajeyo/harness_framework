@@ -14,8 +14,9 @@ root = os.environ.get("CLAUDE_PROJECT_DIR", ".")
 
 
 def git(*args, timeout=8):
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}  # 로그인 창 대기로 멈추지 않게
     return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True,
-                          encoding="utf-8", errors="replace", timeout=timeout)
+                          encoding="utf-8", errors="replace", timeout=timeout, env=env)
 
 
 try:

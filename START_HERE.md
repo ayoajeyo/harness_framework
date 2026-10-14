@@ -1,184 +1,218 @@
-# START HERE — 처음 오셨나요? 여기부터 읽으세요
+# START HERE — 아요바디요 하네스 사용 설명서
 
-이 문서는 이 저장소를 처음 열어 본 사람을 위한 안내서입니다.
-코딩을 잘 몰라도 순서대로 따라 하면 새 프로젝트를 시작할 수 있게 썼습니다.
-
----
-
-## 1. 이 하네스 틀은 무엇인가요?
-
-**한 줄 요약: Claude(AI)에게 일을 "작은 단계로 나눠서, 규칙을 지키며, 자동으로" 시키기 위한 빈 틀입니다.**
-
-조금 더 쉽게 비유하면 이렇습니다.
-
-| 비유 | 이 저장소에서 해당하는 것 |
-|------|--------------------------|
-| 새로 온 직원에게 주는 **회사 규칙집** | `CLAUDE.md`, `docs/` 폴더의 문서들 |
-| 하루치 **업무 지시서** | `phases/{작업이름}/step0.md`, `step1.md` … |
-| 지시서를 하나씩 건네주고 결과를 확인하는 **팀장** | `scripts/execute.py` |
-| 퇴근 전 **검사 담당자** | `.claude/settings.json`의 훅(자동 검사) |
-
-"하네스(harness)"는 원래 말에 채우는 마구(고삐)를 뜻합니다.
-AI가 마음대로 달리지 않도록 **방향과 한계를 정해 주는 장치**라고 생각하면 됩니다.
-
-이 틀이 해 주는 일:
-
-1. 매 단계마다 프로젝트 규칙(`CLAUDE.md` + `docs/*.md`)을 AI에게 다시 읽혀 줍니다.
-2. 앞 단계에서 무엇을 했는지 요약을 다음 단계에 넘겨 줍니다.
-3. 실패하면 에러 내용을 보여 주며 **최대 3번까지** 다시 시도하게 합니다.
-4. 단계가 끝날 때마다 git 커밋(저장 기록)을 자동으로 남깁니다.
+이 저장소는 **앱을 기획 → 제작 → 출시 → 운영 → 개선**하는 전 과정을 Claude Code 위에서 돌리기 위한 작업 틀(하네스)입니다.
+코딩을 몰라도 순서대로 따라 하면 됩니다. 용어가 낯설면 `docs/GLOSSARY.md`.
 
 ---
 
-## 2. 폴더별 역할
+## 0. 처음 한 번: 설치 확인 (PC 마다)
 
-| 폴더 / 파일 | 무엇이 들어 있나 | 사람이 직접 고치나? |
-|-------------|------------------|--------------------|
-| `CLAUDE.md` | 프로젝트 전체 규칙(기술 스택, 꼭 지킬 규칙, 명령어) | ✅ 예, 맨 처음에 채움 |
-| `.claude/commands/harness.md` | `/harness` 명령 — AI가 문서를 읽고 → 논의하고 → 단계를 설계하고 → 실행하는 작업 흐름 | ❌ 보통 그대로 둠 |
-| `.claude/commands/review.md` | `/review` 명령 — 바뀐 코드가 규칙을 지켰는지 표로 점검 | ❌ 보통 그대로 둠 |
-| `.claude/commands/` 그 밖의 명령 | `/start` `/status` `/explain` `/privacy` `/ship` — 아래 "2-1. 도구 한눈에 보기" 참고 | ❌ 그대로 둠 |
-| `.claude/agents/` | 검토 전담 AI 3명 (`reviewer`, `privacy-guard`, `ui-checker`). 코드를 고치지 않고 점검만 함 | ❌ 그대로 둠 |
-| `.claude/skills/` | AI가 필요할 때 꺼내 보는 노하우 (`clean-ui` 디자인, `mobile-webapp` 기본 스택) | △ 디자인 기본값을 바꿀 때만 |
-| `.claude/settings.json` | 훅(자동 안전장치) 설정과 금지 명령 목록 | ❌ 그대로 둠 |
-| `.claude/hooks/` | 훅이 실제로 실행하는 파이썬 스크립트 4개 | ❌ 그대로 둠 |
-| `scripts/new-project.ps1` | 이 틀을 복사해 새 프로젝트를 만드는 스크립트 (4번 작업 순서 1단계) | ❌ 그대로 둠 |
-| `docs/PRD.md` | **무엇을** 만드나 (목표, 사용자, 핵심 기능, 안 만들 것) | ✅ 예 |
-| `docs/ARCHITECTURE.md` | **어떻게** 짜나 (폴더 구조, 데이터 흐름, 상태 관리) | ✅ 예 |
-| `docs/ADR.md` | **왜** 그렇게 정했나 (기술 선택의 이유와 포기한 것) | ✅ 예 |
-| `docs/UI_GUIDE.md` | 화면 디자인 규칙 (색상, 버튼, 글꼴, 금지할 디자인) | ✅ 화면이 있는 프로젝트라면 |
-| `scripts/execute.py` | 단계(step)를 하나씩 Claude에게 실행시키는 자동 실행기 | ❌ 그대로 둠 |
-| `scripts/test_execute.py` | 위 실행기가 제대로 동작하는지 확인하는 테스트 | ❌ 그대로 둠 |
-| `phases/` *(아직 없음)* | 작업 지시서 폴더. `/harness`로 계획을 승인하면 AI가 만들어 줌 | △ 에러 복구 때만 |
+PowerShell(`PS C:\...>` 화면)에서 한 줄씩 입력해 **네 가지 모두 버전 숫자가 나와야** 합니다. 훅(안전장치)이 전부 Python 으로 돌아가므로 Python 이 없으면 안전장치가 **조용히 꺼진 채** 작업됩니다.
 
-### 2-1. 도구 한눈에 보기
+| 확인 | 명령 | 없으면 |
+|------|------|--------|
+| Git | `git --version` | `winget install --id Git.Git -e` |
+| Python 3.10+ | `python --version` | `winget install Python.Python.3.12 --override "/quiet PrependPath=1"` |
+| Node 20+ (테스트·문법검사용) | `node --version` | `winget install OpenJS.NodeJS.LTS` |
+| Claude Code | `claude --version` | `irm https://claude.ai/install.ps1 \| iex` 후 `claude` 로 로그인 |
 
-**명령어** — Claude Code 대화창에 직접 입력합니다.
+설치 후에는 PowerShell(VS Code 포함)을 **완전히 닫고 다시** 엽니다. 그리고 한 번만:
+```powershell
+git config --global user.name "Ayo"
+git config --global user.email "GitHub 가입 이메일"
+git config --global init.defaultBranch main
+```
+GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in with your browser** 로 승인합니다.
 
+---
+
+## 0-1. 30초 요약
+| 하고 싶은 것 | Claude Code 에 입력 |
+|---|---|
+| 새 앱 시작 | PowerShell 에서 `scripts\new-project.ps1 앱이름` → 안내된 폴더에서 `claude` → `/start 앱 한 줄 설명` |
+| 이미 만든 앱을 이 틀로 | PowerShell 에서 `scripts\adopt.ps1 앱폴더경로` → 그 폴더에서 `claude` → `/adopt` |
+| 틀을 고친 뒤 기존 앱들에 반영 | `scripts\update-harness.ps1 앱폴더경로` (도구만 갱신, 문서·코드는 보존) |
+| 배포했는데 망가짐 | `/rollback 무엇이 잘못됐는지` |
+| 기능 하나 추가 | `/feature 기능 설명` |
+| 버그 고치기 | `/fix 어느 화면에서 뭘 했더니 뭐가 잘못됐다` |
+| 배포 | `/ship` |
+| 지금 상태 | `/status` |
+| 다른 PC 와 맞추기 | `/sync` |
+| 뭐가 바뀌었는지 | `/explain` |
+
+---
+
+## 1. 이 틀이 하는 일
+
+| 비유 | 여기서는 |
+|------|---------|
+| 회사 규칙집 | `CLAUDE.md` + `docs/` (AI 가 매번 읽는다) |
+| 업무 지시서 | `/feature` `/fix` 같은 명령어, 큰 작업은 `phases/` 의 step 파일 |
+| 전문 담당자들 | `.claude/agents/` — 설계·테스트·디버그·검토·개인정보·화면·문서 담당 7명 |
+| 사내 노하우 문서 | `.claude/skills/` — 사진·리포트·Supabase·배포·개인정보·git |
+| 자동 안전장치 | `.claude/hooks/` — 위험 명령 차단, 비밀키 차단, 문법 검사, 커밋 전 검사, 다른 PC 변경 알림 |
+| 큰 공사용 자동 실행기 | `scripts/execute.py` — step 을 하나씩 새 AI 세션에 시키고 결과를 기록 |
+
+**두 가지 작업 트랙**
+- **작은 작업(매일)**: `/feature`, `/fix` — 대화하면서 한 기능·한 버그. 설계 → 테스트 → 구현 → 검토 → 문서 → 커밋까지 한 번에.
+- **큰 작업(가끔)**: `/harness` → `python scripts/execute.py` — 새 앱 전체, 큰 구조 변경. 단계별로 자동 실행.
+
+---
+
+## 2. 폴더와 파일
+
+| 경로 | 무엇 | 사람이 고치나 |
+|------|------|------------|
+| `CLAUDE.md` | 공통 규칙(고정) + 프로젝트 규칙(빈칸) | 빈칸만, `/start` 가 채움 |
+| `docs/PRD.md` | 무엇을 누구를 위해 왜 만드나 | `/start` |
+| `docs/ARCHITECTURE.md` | 어떻게 짜여 있나(폴더·데이터 흐름·보안) | `/start`, 바뀌면 `docs-keeper` |
+| `docs/ADR.md` | 왜 그렇게 정했나 (공통 ADR-000 시리즈는 기본값) | 결정이 바뀔 때 |
+| `docs/DATA.md` | 다루는 모든 데이터와 민감도·보관·삭제 | 새 필드 전에 |
+| `docs/UI_GUIDE.md` | 디자인 표준(네이비 단일 포인트·버튼 단어 표준) | 거의 안 고침 |
+| `docs/TESTING.md` | 자동 테스트 규칙 + 폰 수동 점검표 | 점검 항목 추가 |
+| `docs/RELEASE.md` | 버전 규칙, 배포 절차, 스토어 정보 보관함 | 스토어 정보 |
+| `docs/PRIVACY.md` | 동의 문구, 개인정보처리방침 재료 | 책임자·이메일 |
+| `docs/BACKLOG.md` | 할 일·아이디어 | `/backlog` |
+| `docs/CHANGELOG.md` | 변경 이력(사용자 말로) | `/ship` 이 씀 |
+| `docs/GLOSSARY.md` | 용어집 | — |
+| `.claude/commands/` | 슬래시 명령 14개 | 그대로 |
+| `.claude/agents/` | 전문 담당 7명 | 그대로 |
+| `.claude/skills/` | 노하우 8개 | 디자인 기본값 바꿀 때만 |
+| `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
+| `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
+| `scripts/adopt.ps1` | 기존 앱에 하네스 넣기 | 그대로 |
+| `scripts/update-harness.ps1` | 기존 앱의 하네스 도구를 최신 틀로 갱신 | 그대로 |
+| `scripts/execute.py` | 큰 작업 자동 실행기 (`--skip-preflight` 로 사전 점검 생략 가능) | 그대로 |
+| `.env.example` | 서버용 비밀키 이름 예시(값 없음). anon 키는 `js/config.js` 에 | 복사해 `.env` 로 |
+| `.mcp.json.example` | Claude Code 가 Supabase 를 직접 보게 하는 설정 예시 | 쓸 때 복사 |
+
+> `docs/` 중 PRD·ARCHITECTURE·ADR·DATA·UI_GUIDE·TESTING 은 큰 작업의 **매 step 마다 AI 에게 통째로 전달**됩니다. 나머지(BACKLOG·CHANGELOG·GLOSSARY·RELEASE·PRIVACY)는 필요할 때만 읽습니다.
+
+---
+
+## 3. 도구 한눈에 보기
+
+### 명령어 (대화창에 입력)
 | 명령 | 언제 | 하는 일 |
 |------|------|--------|
-| `/start 만들 앱 한 줄` | 새 프로젝트 맨 처음 | 질문 3개 이내로 기획 문서 빈칸을 채워 줌 |
-| `/harness` | 기획이 끝난 뒤 | 구현 계획을 단계(step)로 나누고 실행 준비 |
-| `/status` | 언제든 | 진행 단계, 저장 안 된 변경, 다른 PC와의 동기화 상태를 표로 |
-| `/explain` | 뭐가 바뀌었는지 궁금할 때 | 최근 변경을 초보자 말로 설명 |
-| `/review` | 기능 하나 끝났을 때 | 규칙을 지켰는지 점검 |
-| `/privacy` | 회원 정보·사진을 다루는 기능 후 | 개인정보·비밀키 노출 점검 |
-| `/ship` | 배포 직전 | 점검 → 확인 → GitHub에 올리기 |
+| `/start 설명` | 새 프로젝트 처음 | 질문 3개 이내로 기획 문서 채움 |
+| `/adopt` | 기존 앱 가져온 직후 | 코드를 읽어 문서를 역으로 작성, 표준과 다른 점 진단 |
+| `/feature 설명` | 기능 추가 | 설계→테스트→구현→검토→문서→커밋 |
+| `/fix 증상` | 버그 | 재현 테스트→원인→수정→재발 방지 |
+| `/ship` | 배포 | 점검→버전 4곳→CHANGELOG→폰 점검표→push |
+| `/status` | 언제든 | 현황표 + 지금 할 일 1개 |
+| `/sync` | PC 바꿀 때 | pull·충돌 해결·push 대행 |
+| `/explain` | 궁금할 때 | 최근 변경을 쉬운 말로 |
+| `/review` | 수동 검토 | 규칙 준수 점검표 |
+| `/privacy` | 개인정보 기능 뒤 | 노출 점검 |
+| `/privacy-policy` | 출시 전 | 개인정보처리방침 페이지 생성 |
+| `/backlog 항목` | 아이디어 떠오를 때 | BACKLOG 정리 |
+| `/harness` | 큰 작업 | step 설계·실행 준비 |
+| `/rollback 문제` | 배포 후 사고 | 마지막 배포 되돌리고 새 버전으로 재배포 |
 
-**에이전트** — 명령어가 알아서 부르거나, "reviewer로 검토해줘"처럼 말로 불러도 됩니다.
+### 에이전트 (명령어가 알아서 부름. "architect 로 설계해줘" 처럼 직접 불러도 됨)
+| 이름 | 역할 | 코드 수정 |
+|------|------|---------|
+| `architect` | 설계안·단계 쪼개기·ADR 제안 | ✗ |
+| `tester` | 자동 테스트 작성·실행, 수동 점검 항목 | 테스트 파일만 |
+| `debugger` | 근본 원인 추적 | ✗ |
+| `reviewer` | 버그·규칙 위반 검토 | ✗ |
+| `privacy-guard` | 개인정보·비밀키·동의·RLS 점검 | ✗ |
+| `ui-checker` | 디자인 표준·버튼 단어·4가지 상태 | ✗ |
+| `docs-keeper` | 코드 ↔ 문서 동기화 | 문서만 |
 
-| 이름 | 역할 |
-|------|------|
-| `reviewer` | 버그·규칙 위반 검토 |
-| `privacy-guard` | 개인정보·비밀키·동의 처리 점검 |
-| `ui-checker` | 디자인 규칙·화면 간 일관성 점검 |
-
-**스킬** — 부르지 않아도 AI가 필요할 때 스스로 꺼내 씁니다.
-
+### 스킬 (AI 가 필요할 때 스스로 읽음)
 | 이름 | 내용 |
 |------|------|
-| `clean-ui` | 심플·깔끔 디자인의 CSS 기본값과 금지 패턴 |
-| `mobile-webapp` | 폰 웹앱 기본 스택(HTML/JS + GitHub Pages + 필요 시 Supabase)과 주의점 |
+| `clean-ui` | 심플·깔끔 CSS 기본값, 금지 패턴 |
+| `mobile-webapp` | 폰 웹앱 기본 구성(HTML/JS + GitHub Pages + 필요 시 Supabase) |
+| `camera-photo` | 촬영·축소·회전·IndexedDB·캔버스 점찍기·공유 |
+| `report-print` | A4 여러 장 리포트·PDF 저장 |
+| `supabase-safe` | 테이블·RLS·비공개 버킷·키 구분·기기→서버 이전 |
+| `pwa-release` | manifest·서비스워커 버전·GitHub Pages·Google Play(TWA) |
+| `korean-privacy` | 동의·서명·보관·처리방침·Play 데이터 안전 |
+| `git-two-pc` | 두 PC 작업, 충돌, 되돌리기 |
 
-**훅(자동 안전장치)** — 따로 할 일 없이 항상 켜져 있습니다.
-
-| 언제 | 하는 일 |
-|------|--------|
-| Claude Code를 켤 때 | 다른 PC에서 올린 변경이 있으면 "`git pull` 하세요"라고 알려 줌 |
-| 명령을 실행하기 전 | 폴더 통째 삭제, 강제 push, 작업 버리기 같은 되돌릴 수 없는 명령 차단 |
-| 파일을 쓰기 전 | API 키·service_role 키 같은 비밀키가 코드에 들어가면 차단 |
-| 작업을 마칠 때 | `package.json`이 있으면 lint → build → test 자동 실행 |
-
-> 💡 `docs/` 안의 모든 `.md` 파일은 **매 단계마다 AI에게 통째로 전달**됩니다.
-> 그래서 문서를 잘 써 둘수록 AI가 덜 헤맵니다.
-
----
-
-## 3. 새 프로젝트를 시작할 때 사람이 채워야 하는 빈칸
-
-**가장 쉬운 방법: Claude Code에서 `/start 만들 앱 한 줄 설명`을 입력하세요.** AI가 기본값으로 채우고, 꼭 필요한 것만 3개 이내로 물어봅니다.
-
-직접 채우고 싶다면, 파일 안에서 `{ }` 중괄호로 감싼 부분이 전부 빈칸입니다. `CLAUDE.md`의 "AYOAJEYO 공통 규칙"과 `docs/UI_GUIDE.md`는 이미 기본값이 들어 있어서 그대로 써도 됩니다.
-
-| 순서 | 파일 | 채워야 할 빈칸 |
-|------|------|----------------|
-| 1 | `CLAUDE.md` | 프로젝트명 / 기술 스택 3줄 / 이 프로젝트만의 규칙 / 명령어 |
-| 2 | `docs/PRD.md` | 프로젝트명 / 목표 한 줄 / 사용자 / 핵심 기능 3개 / MVP에서 뺄 것 3개 / 디자인 방향·색상 |
-| 3 | `docs/ARCHITECTURE.md` | 디렉토리 구조 / 패턴 / 데이터 흐름 / 저장소 표 |
-| 4 | `docs/ADR.md` | 철학 한 줄 / ADR-001~003 각각의 결정·이유·트레이드오프 |
-| 5 | `docs/UI_GUIDE.md` | 빈칸 없음 — 심플·깔끔 기본값. 바꾸고 싶은 값만 수정 |
-
-빈칸이 남았는지 확인하는 방법 (Git Bash에서):
-
-```bash
-grep -rn "{" CLAUDE.md docs/
-```
+### 훅 (항상 켜져 있음)
+| 때 | 하는 일 |
+|----|--------|
+| Claude Code 켤 때 | 다른 PC 에서 올린 변경이 있으면 `git pull` 하라고 알림 |
+| 명령 실행 전 | 폴더 통째 삭제·강제 push·작업 버리기 등 되돌릴 수 없는 명령 차단 |
+| 커밋 직전 | `.env`·키 파일·5MB 이상 파일이 섞여 있으면 차단 |
+| 파일 쓰기 전 | API 키·service_role 키가 코드에 들어가면 차단 |
+| 파일 쓴 직후 | js 문법·json 형식·html 태그 짝 검사 → 틀리면 즉시 고치게 |
+| 작업 마칠 때 | `package.json` 있으면 lint → build → test |
 
 ---
 
-## 4. 작업 순서
+## 4. 처음 한 번: 새 앱 시작
 
-1. **이 저장소를 복사해서 새 프로젝트 폴더를 만듭니다.** 이 폴더에서 PowerShell을 열고 아래처럼 입력하면 자동으로 됩니다.
+1. **폴더 만들기** — 이 틀 폴더에서 PowerShell:
    ```powershell
    powershell -ExecutionPolicy Bypass -File scripts\new-project.ps1 my-app
    ```
-   - `Documents\my-app` 폴더가 생기고, 이 틀의 git 기록은 빼고 **새 git 저장소**로 시작합니다.
-   - 같은 이름의 폴더가 이미 있으면 덮어쓰지 않고 멈춥니다.
-   - 끝나면 `cd $HOME\Documents\my-app` 으로 이동해서 2번부터 진행하세요.
-2. **Claude Code를 켜고 `/start 만들 앱 한 줄 설명`을 입력합니다.** 질문에 답하면 3번 표의 빈칸이 채워집니다.
-3. **빈칸을 채운 상태를 커밋합니다.**
-   ```bash
-   git add -A
-   git commit -m "docs: 프로젝트 문서 작성"
+   끝나면 스크립트가 알려 주는 `cd "…"` 와 `claude` 두 줄을 그대로 입력합니다. (문서 폴더가 OneDrive 에 있어도 맞는 경로를 알려 줍니다.)
+2. **기획** — `/start 트레이너가 회원 체형 사진을 찍어 리포트를 만드는 앱` 처럼 한 줄. 질문에 답하면 PRD·ARCHITECTURE·DATA·CLAUDE.md 가 채워진다. 끝나면 `/explain` 으로 무엇이 정해졌는지 확인.
+3. **커밋** — `git add -A` → `git commit -m "docs: 기획 문서"`.
+4. **GitHub 저장소 만들기** — github.com 에서 New repository(이름 = 폴더명, Public, README 없이) → 안내된 두 줄:
+   ```powershell
+   git remote add origin https://github.com/ayoajeyo/my-app.git
+   git push -u origin main
    ```
-4. **Claude Code를 열고 `/harness`를 입력합니다.**
-   AI가 `docs/`를 읽고 프로젝트를 파악합니다.
-5. **AI와 논의합니다.** AI가 결정이 필요한 부분을 물어보면 답해 줍니다.
-6. **"구현 계획 짜 줘"라고 말합니다.** AI가 여러 단계(step)로 나눈 초안을 보여 줍니다.
-   - 한 단계가 너무 크면 "더 쪼개 줘"라고 요청하세요.
-7. **초안이 마음에 들면 승인합니다.** AI가 `phases/` 폴더 안에 지시서 파일들을 만듭니다.
-   - `phases/index.json` (전체 현황)
-   - `phases/{작업이름}/index.json` (단계 목록과 상태)
-   - `phases/{작업이름}/step0.md`, `step1.md` … (단계별 지시서)
-8. **실행기를 돌립니다.**
-   ```bash
-   python scripts/execute.py {작업이름}          # 예: python scripts/execute.py 0-mvp
-   python scripts/execute.py {작업이름} --push   # 끝나면 GitHub에 올리기까지
-   ```
-   - 실행하면 `feat-{작업이름}` 브랜치가 자동으로 만들어집니다.
-9. **결과를 확인합니다.**
-   - `phases/{작업이름}/index.json`에서 각 단계의 `status`가 `completed`인지 봅니다.
-   - Claude Code에서 `/review`를 입력해 규칙을 지켰는지 점검합니다.
-10. **멈췄다면 복구 후 다시 실행합니다.**
+   Settings → Pages → Branch `main` 으로 배포 주소를 켠다.
+5. **만들기** — 작은 앱이면 `/feature` 를 기능마다 반복. 큰 앱이면 `/harness` → 승인 → `python scripts/execute.py 0-mvp`.
+6. **출시** — `/privacy-policy` → `/ship` → 폰에서 확인 → (스토어는 `pwa-release` 스킬·RELEASE.md).
 
-| 상태 | 뜻 | 해야 할 일 |
-|------|----|-----------|
-| `completed` | 성공 | 없음 |
-| `error` | 3번 다시 해도 실패 | `error_message`를 읽고 원인 해결 → `status`를 `"pending"`으로 바꾸고 `error_message` 줄 삭제 → 8번 다시 실행 |
-| `blocked` | 사람이 해야 할 일이 있음 (API 키, 로그인 등) | `blocked_reason`에 적힌 일을 처리 → `status`를 `"pending"`으로 바꾸고 `blocked_reason` 줄 삭제 → 8번 다시 실행 |
+## 5. 매일: 기능·버그·배포
+```
+claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 → /sync
+/status           ← 오늘 할 일 확인
+/feature …        ← 또는 /fix …
+/ship             ← 폰 점검표 확인 후 배포
+```
+
+## 6. 기존 앱 가져오기 (예: posture-check)
+```powershell
+cd $HOME\Documents\harness_framework
+powershell -ExecutionPolicy Bypass -File scripts\adopt.ps1 $HOME\Documents\posture-check
+```
+스크립트가 알려 주는 `cd` 와 `claude` 를 입력한 뒤 `/adopt 아요바디요 체형 측정 앱`.
+`/adopt` 가 코드를 읽어 문서를 채우고, 표준과 다른 점(🔴 비밀키·버전 불일치 등)을 BACKLOG 에 넣는다. 그다음부터 `/feature` `/fix` `/ship` 을 그대로 쓴다.
+
+## 7. 큰 작업 실행기 (`/harness` + execute.py)
+1. `/harness` → 논의 → "구현 계획 짜 줘" → 승인 → `phases/` 생성
+2. `git add -A && git commit -m "docs: 구현 계획"` (실행기는 저장 안 된 변경이 있으면 멈춤)
+3. `python scripts/execute.py 0-mvp` (`--push` 붙이면 끝나고 push)
+4. 결과: `phases/0-mvp/index.json` 의 `status`. `error`/`blocked` 는 원인 해결 → `"pending"` 으로 바꾸고 재실행
+5. 끝나면 `git checkout main` → `git merge feat-0-mvp` → `/ship`
+
+실행기 사전 점검(빈칸·미커밋·claude 설치)을 건너뛰려면 `--skip-preflight`. 한 step 이 30분을 넘기면 자동 중단되어 `error` 로 기록된다.
+
+## 7-1. 틀 자체를 고쳤을 때
+틀(`harness_framework`)의 훅·명령·스킬을 고쳤다면 → 틀 폴더에서 커밋·push → 각 앱 폴더에 `scripts\update-harness.ps1 앱경로` 로 반영. 문서와 코드는 건드리지 않고 도구만 바뀐다.
 
 ---
 
-## 5. 초보자가 자주 하는 실수
-
-| # | 실수 | 무슨 일이 생기나 | 이렇게 하세요 |
-|---|------|------------------|---------------|
-| 1 | `{ }` 빈칸을 그대로 두고 실행 | AI가 "{프로젝트명}" 같은 글자를 진짜 규칙으로 읽고 엉뚱하게 만듦 | 실행 전에 `grep -rn "{" CLAUDE.md docs/`로 확인 |
-| 2 | `ARCHITECTURE.md`의 예시 구조를 그대로 둠 | 내 앱과 맞지 않는 폴더가 생김 | `/start`로 실제 구조를 정하기 |
-| 3 | 테스트 없이 계산 로직을 만듦 | `package.json`이 없으면 자동 검사를 건너뛰어 오류를 늦게 발견 | `mobile-webapp` 스킬의 `package.json` 예시로 `node --test` 연결 |
-| 4 | 한 단계(step)에 일을 너무 많이 몰아넣음 | AI가 중간에 헷갈리고 3번 재시도 끝에 `error` | 한 단계 = 한 모듈/한 기능만 |
-| 5 | 지시서에 "아까 말한 대로" 같은 표현을 씀 | 각 단계는 **새 AI 세션**에서 실행돼서 "아까"를 모름 | 필요한 정보는 지시서 안에 전부 적기 |
-| 6 | 완료 기준을 "잘 동작해야 한다"처럼 막연하게 씀 | 성공인지 실패인지 판단 못 함 | `npm test`처럼 **실제로 실행할 수 있는 명령**으로 적기 |
-| 7 | `error`/`blocked` 상태를 안 고치고 다시 실행 | 실행기가 바로 멈춤 | 원인 해결 → `status`를 `"pending"`으로 바꾼 뒤 재실행 |
-| 8 | 커밋 안 한 변경이 있는 채로 실행 | 브랜치 전환·자동 커밋에 내 작업이 섞임 | 실행 전에 `git status`가 깨끗한지 확인 |
-| 9 | Windows에서 `python3`를 그대로 입력 | "명령을 찾을 수 없음" | `python` 또는 `py`로 입력 |
-| 10 | Windows에서 한글 문서 때문에 `UnicodeDecodeError` | 실행기가 문서를 못 읽고 멈춤 | 실행기는 UTF-8로 읽도록 고쳐져 있으니, 문서를 UTF-8로 저장하기 (메모장: 다른 이름으로 저장 → 인코딩 UTF-8) |
-| 11 | 실행기가 AI를 **승인 없이** 돌린다는 걸 모름 | 실행 중 AI가 파일 수정·명령 실행을 묻지 않고 함 | 중요한 폴더에서 돌리지 말고, 반드시 git으로 관리되는 폴더에서 실행 |
-| 12 | `claude` 명령이 설치·로그인 안 된 상태 | 실행기가 첫 단계부터 실패 | 터미널에서 `claude --version`이 나오는지 먼저 확인 |
-| 13 | 병원·집 PC를 오가며 `git pull` 없이 작업 | 두 PC의 내용이 충돌 | Claude Code를 켜면 훅이 알려 줌. 알림이 뜨면 먼저 `git pull` |
-| 14 | 비밀키를 코드에 붙여 넣음 | GitHub에 공개되어 누구나 사용 가능 | 훅이 막아 줌. 키는 `.env` 파일에 넣기 |
+## 8. 자주 하는 실수
+| # | 실수 | 결과 | 이렇게 |
+|---|------|------|-------|
+| 1 | `{ }` 빈칸을 두고 실행 | 실행기가 멈춤 / AI 가 엉뚱하게 만듦 | `/start` 로 채우기 |
+| 2 | 원본 틀 폴더(`harness_framework`)에서 앱 작업 | 틀이 앱 하나로 오염 | 항상 `new-project.ps1` 로 복사 |
+| 3 | `/ship` 없이 push | 버전 안 올라 폰에 옛 화면 | 배포는 `/ship` 만 |
+| 4 | PC 바꾸고 pull 안 함 | 충돌 | 켤 때 알림 → `/sync` |
+| 5 | 비밀키를 코드에 | 훅이 막음. 이미 올라갔으면 키 교체 | `.env` |
+| 6 | 실제 회원 데이터로 테스트 | 유출 위험 | 홍길동·010-0000-0000 |
+| 7 | 한 step 에 일 몰아넣기 | 3회 재시도 후 error | 한 step = 한 모듈 |
+| 8 | 지시서에 "아까 말한 대로" | 새 세션은 모름 | 전부 적기 |
+| 9 | `python3` 입력 | Windows 는 못 찾음 | `python` |
+| 10 | 실행기가 **승인 없이** 돌아간다는 걸 모름 | 파일 수정·명령 실행을 묻지 않음 | git 관리 폴더에서만, 훅이 위험 명령은 막음 |
+| 11 | 요청 안 한 기능이 끼어듦 | 범위가 커지고 버그 | CLAUDE.md 규칙: BACKLOG 에만 적음 |
+| 12 | 사진·zip 을 커밋 | 훅이 5MB 이상 차단 | 코드 저장소엔 코드만 |
+| 13 | 동의 전에 촬영 | 법적 문제 | `korean-privacy` 스킬 규칙 |
+| 14 | `claude` 미설치·미로그인 | 실행기 첫 단계 실패 | `claude --version` 확인 |
 
 ---
 
-막히면 Claude Code에서 이렇게 물어보세요:
-> "START_HERE.md 4번 작업 순서 중 ○번에서 막혔어. 지금 상태 봐 줘."
+## 9. 더 알아보기
+- Claude Code 문서: https://code.claude.com/docs
+- 이 틀의 원본: jha0313/harness_framework (구조 아이디어) → ayoajeyo/harness_framework (사업용으로 확장)

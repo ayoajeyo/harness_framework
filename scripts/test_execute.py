@@ -433,7 +433,7 @@ class TestInvokeClaude:
             output = executor._invoke_claude(step, preamble)
 
         cmd = mock_run.call_args[0][0]
-        assert cmd[0] == "claude"
+        assert cmd[0].endswith("claude")
         assert "-p" in cmd
         assert "--dangerously-skip-permissions" in cmd
         assert "--output-format" in cmd
@@ -559,3 +559,74 @@ class TestCheckBlockers:
         with pytest.raises(SystemExit) as exc_info:
             inst._check_blockers()
         assert exc_info.value.code == 2
+
+
+# ---------------------------------------------------------------------------
+# _preflight / SKIP_DOCS
+# ---------------------------------------------------------------------------
+
+class TestPreflight:
+    def test_skips_operational_docs(self, executor, tmp_project):
+        (tmp_project / "docs" / "CHANGELOG.md").write_text("# 변경 이력", encoding="utf-8")
+        (tmp_project / "docs" / "GLOSSARY.md").write_text("# 용어집", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project):
+            result = executor._load_guardrails()
+        assert "Architecture" in result
+        assert "변경 이력" not in result and "용어집" not in result
+
+    def test_placeholder_blocks(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text("# 프로젝트: {프로젝트명}", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout="")), \
+             patch("shutil.which", return_value="/usr/bin/claude"):
+            with pytest.raises(SystemExit) as e:
+                executor._preflight()
+        assert e.value.code == 1
+
+    def test_dirty_tree_blocks(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text("# 프로젝트: 테스트", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout=" M a.js\n")), \
+             patch("shutil.which", return_value="/usr/bin/claude"):
+            with pytest.raises(SystemExit):
+                executor._preflight()
+
+    def test_clean_passes(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text("# 프로젝트: 테스트\n코드 예시 {\"a\": 1}", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout="")), \
+             patch("shutil.which", return_value="/usr/bin/claude"):
+            executor._preflight()  # 예외 없음
+
+    def test_missing_claude_blocks(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text("# 프로젝트: 테스트", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout="")), \
+             patch("shutil.which", return_value=None):
+            with pytest.raises(SystemExit):
+                executor._preflight()
+
+
+    def test_placeholder_ignores_json_and_empty_braces(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text(
+            "# 프로젝트: 테스트\n빈칸 `{ }` 은 /start 로.\n{\"a\": 1}\n{{mustache}}\n{나중에: 스토어 이름}", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout="")), \
+             patch("shutil.which", return_value="/usr/bin/claude"):
+            executor._preflight()
+
+    def test_placeholder_catches_multiline(self, executor, tmp_project):
+        (tmp_project / "CLAUDE.md").write_text("## 명령어\n{프로젝트에 맞게 채움. 예:\n- 테스트: npm test}", encoding="utf-8")
+        with patch("execute.ROOT", tmp_project), \
+             patch.object(executor, "_run_git", return_value=MagicMock(returncode=0, stdout="")), \
+             patch("shutil.which", return_value="/usr/bin/claude"):
+            with pytest.raises(SystemExit):
+                executor._preflight()
+
+
+class TestTimeout:
+    def test_timeout_recorded_not_raised(self, executor):
+        step = {"step": 2, "name": "ui"}
+        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(cmd=["claude"], timeout=1800)):
+            out = executor._invoke_claude(step, "preamble")
+        assert out["exitCode"] == 124 and "TIMEOUT" in out["stderr"]

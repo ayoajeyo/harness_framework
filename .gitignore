@@ -12,7 +12,15 @@ phases/**/step*-output.json
 .env
 .env.*
 *.key
+*.pem
+*.jks
+*.keystore
+*.aab
+*.apk
+!.env.example
 
 # python
 __pycache__/
 .pytest_cache/
+
+.mcp.json

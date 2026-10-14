@@ -1,22 +1,18 @@
 ---
-description: 지금 프로젝트 진행 현황 — 작업 단계, 저장 안 된 변경, 다른 PC와의 동기화 상태
+description: 지금 프로젝트 현황 — 진행 단계, 저장 안 된 변경, 다른 PC 와의 동기화, 미출시 변경, 문서 빈칸
 ---
 
-프로젝트 현황을 초보자가 한눈에 볼 수 있게 정리하라. 아무것도 수정하지 마라(읽기 전용).
+현황을 초보자가 한눈에 보게 정리한다. 아무것도 수정하지 않는다.
 
-확인할 것:
-1. `phases/index.json`과 각 `phases/*/index.json` — 작업(phase)별 step 상태. 없으면 "아직 구현 계획 없음".
-2. `git status` — 저장(커밋)하지 않은 변경 파일.
-3. `git fetch` 후 `git status -sb` — GitHub보다 앞서 있는지(push 필요) 뒤처져 있는지(pull 필요).
-4. `docs/`와 `CLAUDE.md`에 남은 `{ }` 빈칸 개수.
+확인:
+1. `git status` / `git fetch` 후 `git status -sb` — 미커밋, push 필요(ahead), pull 필요(behind).
+2. `phases/*/index.json` — 실행기 단계 상태(없으면 "없음").
+3. `docs/CHANGELOG.md` 맨 위가 "미출시" 인지 → 배포 대기 변경.
+4. `CLAUDE.md`, `docs/PRD.md`, `docs/DATA.md` 의 `{ }` 빈칸 개수.
+5. `docs/BACKLOG.md` "지금" 항목 수.
+6. 버전 네 곳이 같은지(`APP_VERSION`, manifest, sw.js, CHANGELOG).
 
-출력 형식:
-
+출력:
 | 항목 | 상태 | 할 일 |
 |------|------|------|
-| 구현 단계 | ✅ 3/5 완료 · ⏳ step3 대기 | `python scripts/execute.py 0-mvp` |
-| 저장 안 된 변경 | 2개 파일 | 커밋 필요 |
-| GitHub 동기화 | 뒤처짐 1개 | `git pull` |
-| 기획 빈칸 | 0개 | — |
-
-표 아래에 "지금 바로 할 일" 1가지만 제시하라.
+표 아래 "지금 바로 할 일" 1가지.

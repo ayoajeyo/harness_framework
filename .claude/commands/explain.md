@@ -5,7 +5,7 @@ argument-hint: [설명할 범위 — 비우면 마지막 커밋과 저장 안 �
 
 최근 변경을 코딩을 모르는 사람도 이해하게 설명하라. 아무것도 수정하지 마라.
 
-범위: $ARGUMENTS (비어 있으면 `git diff HEAD~1` + `git status`의 변경)
+범위: $ARGUMENTS (비어 있으면 `git diff HEAD~1` + `git status`의 변경. "기획" 이라고 하면 docs/ 의 PRD·ARCHITECTURE·DATA 에서 정해진 내용을 설명)
 
 설명 규칙:
 - 파일 하나당: **무엇이 바뀌었나 → 사용자 입장에서 뭐가 달라지나 → 주의할 점** 순서로 2~3줄.

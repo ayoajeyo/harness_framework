@@ -1,3 +1,7 @@
+---
+description: 큰 작업(새 앱·구조 변경)을 step 으로 설계하고 자동 실행기(execute.py)용 지시서를 만든다
+---
+
 이 프로젝트는 Harness 프레임워크를 사용한다. 아래 워크플로우에 따라 작업을 진행하라.
 
 ---
@@ -6,7 +10,7 @@
 
 ### A. 탐색
 
-`/docs/` 하위 문서(PRD, ARCHITECTURE, ADR 등)를 읽고 프로젝트의 기획·아키텍처·설계 의도를 파악한다. 필요시 Explore 에이전트를 병렬로 사용한다.
+`/docs/` 하위 문서(PRD, ARCHITECTURE, ADR, DATA, UI_GUIDE, TESTING)를 읽고 프로젝트의 기획·아키텍처·설계 의도를 파악한다. 필요시 Explore 에이전트를 병렬로 사용한다.
 
 ### B. 논의
 
@@ -94,6 +98,8 @@
 
 - `/docs/ARCHITECTURE.md`
 - `/docs/ADR.md`
+- `/docs/DATA.md` (데이터를 다루는 step 이면)
+- `/docs/UI_GUIDE.md` (화면을 만드는 step 이면)
 - {이전 step에서 생성/수정된 파일 경로}
 
 이전 step에서 만들어진 코드를 꼼꼼히 읽고, 설계 의도를 이해한 뒤 작업하라.
@@ -107,9 +113,11 @@
 ## Acceptance Criteria
 
 ```bash
-npm run build   # 컴파일 에러 없음
-npm test        # 테스트 통과
+node --check js/app.js      # 문법 오류 없음 (바뀐 js 파일마다)
+npm test                    # 테스트 통과 (package.json 이 있을 때)
 ```
+AC 에는 **끝나는 명령만** 넣는다(`python -m http.server` 처럼 계속 도는 명령은 세션이 멈춘다).
+자동으로 확인 못 하는 화면 동작은 아래 "사람이 확인할 것" 에 적는다: 브라우저에서 {화면} 을 열어 {행동} 하면 {결과}.
 
 ## 검증 절차
 
@@ -129,6 +137,9 @@ npm test        # 테스트 통과
 - 기존 테스트를 깨뜨리지 마라
 ```
 
+### D-4. 큰 작업과 작은 작업
+이 워크플로우(phases + execute.py)는 **새 앱 전체나 큰 구조 변경**용이다. 기능 하나·버그 하나는 `/feature` `/fix` 가 더 빠르다. step 이 3개 이하로 나오면 `/feature` 로 하자고 제안하라.
+
 ### E. 실행
 
 ```bash
@@ -139,7 +150,7 @@ python scripts/execute.py {task-name} --push  # 실행 후 push
 execute.py가 자동으로 처리하는 것:
 
 - `feat-{task-name}` 브랜치 생성/checkout
-- 가드레일 주입 — CLAUDE.md + docs/*.md 내용을 매 step 프롬프트에 포함
+- 가드레일 주입 — CLAUDE.md + docs 의 PRD·ARCHITECTURE·ADR·DATA·UI_GUIDE·TESTING 을 매 step 프롬프트에 포함 (BACKLOG·CHANGELOG·GLOSSARY·RELEASE·PRIVACY 는 제외)
 - 컨텍스트 누적 — 완료된 step의 summary를 다음 step 프롬프트에 전달
 - 자가 교정 — 실패 시 최대 3회 재시도하며, 이전 에러 메시지를 프롬프트에 피드백
 - 2단계 커밋 — 코드 변경(`feat`)과 메타데이터(`chore`)를 분리 커밋

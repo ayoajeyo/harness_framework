@@ -10,6 +10,8 @@ import argparse
 import contextlib
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -58,8 +60,10 @@ class StepExecutor:
     CHORE_MSG = "chore({phase}): step {num} output"
     TZ = timezone(timedelta(hours=9))
 
-    def __init__(self, phase_dir_name: str, *, auto_push: bool = False):
+    def __init__(self, phase_dir_name: str, *, auto_push: bool = False, skip_preflight: bool = False):
         self._root = str(ROOT)
+        self._skip_preflight = skip_preflight
+        self._claude_bin = None
         self._phases_dir = ROOT / "phases"
         self._phase_dir = self._phases_dir / phase_dir_name
         self._phase_dir_name = phase_dir_name
@@ -82,6 +86,8 @@ class StepExecutor:
 
     def run(self):
         self._print_header()
+        if not self._skip_preflight:
+            self._preflight()
         self._check_blockers()
         self._checkout_branch()
         guardrails = self._load_guardrails()
@@ -174,6 +180,9 @@ class StepExecutor:
 
     # --- guardrails & context ---
 
+    # 매 step 프롬프트에 넣지 않는 문서. 작업 규칙이 아니라 운영·참고용이라 넣으면 길이만 늘어난다.
+    SKIP_DOCS = {"BACKLOG", "CHANGELOG", "GLOSSARY", "RELEASE", "PRIVACY"}
+
     def _load_guardrails(self) -> str:
         sections = []
         claude_md = ROOT / "CLAUDE.md"
@@ -182,8 +191,39 @@ class StepExecutor:
         docs_dir = ROOT / "docs"
         if docs_dir.is_dir():
             for doc in sorted(docs_dir.glob("*.md")):
+                if doc.stem in self.SKIP_DOCS:
+                    continue
                 sections.append(f"## {doc.stem}\n\n{doc.read_text(encoding='utf-8')}")
         return "\n\n---\n\n".join(sections) if sections else ""
+
+    # --- 사전 점검 ---
+
+    # 빈칸: 중괄호 안에 한글·영문이 있는 것. `{ }` 처럼 공백만 있거나 `{"a":1}` 같은 JSON·코드는 제외.
+    PLACEHOLDER = re.compile(r"(?<!\{)\{(?=[^{}]*[가-힣A-Za-z])(?![\s\"'`])[^{}]{1,300}\}(?!\})", re.S)
+    PREFLIGHT_DOCS = ("CLAUDE.md", "docs/PRD.md", "docs/ARCHITECTURE.md", "docs/DATA.md")
+
+    def _preflight(self):
+        """실행 전에 흔한 실수를 잡는다: 빈칸 미기입, 저장 안 된 변경, claude 미설치."""
+        problems = []
+        for rel in self.PREFLIGHT_DOCS:
+            f = ROOT / rel
+            if not f.exists():
+                continue
+            hits = [m.group(0).split("\n")[0] for m in self.PLACEHOLDER.finditer(f.read_text(encoding="utf-8"))
+                    if not m.group(0).startswith("{{") and "나중에:" not in m.group(0)]
+            if hits:
+                problems.append(f"{rel}: 빈칸 {len(hits)}개 남음 (예: {hits[0]}) → /start 로 채우세요")
+        r = self._run_git("status", "--porcelain")
+        if r.returncode == 0 and r.stdout.strip():
+            problems.append("저장(커밋)하지 않은 변경이 있습니다 → 먼저 커밋하거나 되돌리세요")
+        self._claude_bin = shutil.which("claude")
+        if self._claude_bin is None:
+            problems.append("claude 명령을 찾을 수 없습니다 → Claude Code 설치·로그인 확인")
+        if problems:
+            print("\n  실행 전 점검에서 문제가 발견되어 멈춥니다:")
+            for p in problems:
+                print(f"  - {p}")
+            sys.exit(1)
 
     @staticmethod
     def _build_step_context(index: dict) -> str:
@@ -237,11 +277,17 @@ class StepExecutor:
         prompt = preamble + step_file.read_text(encoding="utf-8")
         # 프롬프트는 stdin으로 넘긴다. 명령줄 인자로 넘기면 Windows 길이 제한(약 3만 2천 자)에 걸려
         # 문서가 길어졌을 때 실행 자체가 실패한다.
-        result = subprocess.run(
-            ["claude", "-p", "--dangerously-skip-permissions", "--output-format", "json"],
-            input=prompt, cwd=self._root, capture_output=True, text=True,
-            encoding="utf-8", errors="replace", timeout=1800,
-        )
+        # Windows 에서 npm 으로 설치한 claude 는 claude.cmd 라서 전체 경로로 불러야 찾는다.
+        claude_bin = self._claude_bin or shutil.which("claude") or "claude"
+        try:
+            result = subprocess.run(
+                [claude_bin, "-p", "--dangerously-skip-permissions", "--output-format", "json"],
+                input=prompt, cwd=self._root, capture_output=True, text=True,
+                encoding="utf-8", errors="replace", timeout=1800,
+            )
+        except subprocess.TimeoutExpired as e:
+            print(f"\n  WARN: step {step_num} 이 30분을 넘겨 중단됨")
+            result = subprocess.CompletedProcess(e.cmd, 124, e.stdout or "", "TIMEOUT: 30분 초과. 끝나지 않는 명령(서버 실행 등)이 AC 에 있는지 확인하세요.")
 
         if result.returncode != 0:
             print(f"\n  WARN: Claude가 비정상 종료됨 (code {result.returncode})")
@@ -411,9 +457,10 @@ def main():
     parser = argparse.ArgumentParser(description="Harness Step Executor")
     parser.add_argument("phase_dir", help="Phase directory name (e.g. 0-mvp)")
     parser.add_argument("--push", action="store_true", help="Push branch after completion")
+    parser.add_argument("--skip-preflight", action="store_true", help="실행 전 점검(빈칸·미커밋·claude 설치) 건너뛰기")
     args = parser.parse_args()
 
-    StepExecutor(args.phase_dir, auto_push=args.push).run()
+    StepExecutor(args.phase_dir, auto_push=args.push, skip_preflight=args.skip_preflight).run()
 
 
 if __name__ == "__main__":
