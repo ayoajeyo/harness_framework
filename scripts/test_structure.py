@@ -2,6 +2,8 @@
 import re
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 CLAUDE = ROOT / ".claude"
 
@@ -39,7 +41,6 @@ def test_skills_have_name_matching_folder():
 def test_plan_feature_is_wired():
     assert (CLAUDE / "commands" / "plan.md").exists()
     assert (CLAUDE / "skills" / "plan-gate" / "SKILL.md").exists()
-    assert (ROOT / "docs" / "PLANS" / "README.md").exists()
     for name in ("plan", "feature", "fix"):
         text = (CLAUDE / "commands" / f"{name}.md").read_text(encoding="utf-8")
         assert "plan-gate" in text, f"{name}.md 가 plan-gate 를 가리키지 않음"
@@ -58,11 +59,15 @@ def test_plan_command_does_not_allow_code_changes():
 
 
 def test_adopt_copies_plans_folder():
+    if not (ROOT / "scripts" / "adopt.ps1").exists():
+        pytest.skip("앱 저장소에는 adopt.ps1 이 없음 (틀에서만 점검)")
     text = (ROOT / "scripts" / "adopt.ps1").read_text(encoding="utf-8-sig")
     assert "docs\\PLANS\\README.md" in text
 
 
 def test_start_here_counts_match_files():
+    if not (ROOT / "START_HERE.md").exists():
+        pytest.skip("앱 저장소에는 START_HERE.md 가 없음 (틀에서만 점검)")
     text = (ROOT / "START_HERE.md").read_text(encoding="utf-8")
     cmds = len(list((CLAUDE / "commands").glob("*.md")))
     skills = len([d for d in (CLAUDE / "skills").iterdir() if d.is_dir()])

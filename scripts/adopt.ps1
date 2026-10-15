@@ -26,7 +26,7 @@ function Copy-IfMissing($rel) {
 
 # .claude 는 하위 항목 단위로 (기존 앱에 .claude\settings.local.json 만 있어도 도구가 들어가게)
 foreach ($sub in @("settings.json", "hooks", "commands", "agents", "skills")) { Copy-IfMissing (Join-Path ".claude" $sub) }
-foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example")) { Copy-IfMissing $rel }
+foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example")) { Copy-IfMissing $rel }
 foreach ($doc in Get-ChildItem (Join-Path $template "docs") -Filter *.md) { Copy-IfMissing ("docs\" + $doc.Name) }
 Copy-IfMissing "docs\PLANS\README.md"
 
