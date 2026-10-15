@@ -28,6 +28,7 @@ function Copy-IfMissing($rel) {
 foreach ($sub in @("settings.json", "hooks", "commands", "agents", "skills")) { Copy-IfMissing (Join-Path ".claude" $sub) }
 foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example")) { Copy-IfMissing $rel }
 foreach ($doc in Get-ChildItem (Join-Path $template "docs") -Filter *.md) { Copy-IfMissing ("docs\" + $doc.Name) }
+Copy-IfMissing "docs\PLANS\README.md"
 
 # CLAUDE.md 가 이미 있으면 옆에 참고본으로
 if (Test-Path (Join-Path $Target "CLAUDE.md")) {

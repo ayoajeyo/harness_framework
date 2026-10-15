@@ -75,9 +75,10 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `docs/BACKLOG.md` | 할 일·아이디어 | `/backlog` |
 | `docs/CHANGELOG.md` | 변경 이력(사용자 말로) | `/ship` 이 씀 |
 | `docs/GLOSSARY.md` | 용어집 | — |
-| `.claude/commands/` | 슬래시 명령 14개 | 그대로 |
+| `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
+| `.claude/commands/` | 슬래시 명령 15개 | 그대로 |
 | `.claude/agents/` | 전문 담당 7명 | 그대로 |
-| `.claude/skills/` | 노하우 8개 | 디자인 기본값 바꿀 때만 |
+| `.claude/skills/` | 노하우 9개 | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
 | `scripts/adopt.ps1` | 기존 앱에 하네스 넣기 | 그대로 |
@@ -97,8 +98,9 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 |------|------|--------|
 | `/start 설명` | 새 프로젝트 처음 | 질문 3개 이내로 기획 문서 채움 |
 | `/adopt` | 기존 앱 가져온 직후 | 코드를 읽어 문서를 역으로 작성, 표준과 다른 점 진단 |
-| `/feature 설명` | 기능 추가 | 설계→테스트→구현→검토→문서→커밋 |
-| `/fix 증상` | 버그 | 재현 테스트→원인→수정→재발 방지 |
+| `/plan 설명` | 구현 전에 계획만 | 계획서(`docs/PLANS/`) 작성 → 승인 대기. 코드는 안 건드림 |
+| `/feature 설명` | 기능 추가 | 설계→(위험하면 계획 승인)→테스트→구현→검토→문서→커밋 |
+| `/fix 증상` | 버그 | 재현→원인→(위험하면 계획 승인)→수정→재발 방지 |
 | `/ship` | 배포 | 점검→버전 4곳→CHANGELOG→폰 점검표→push |
 | `/status` | 언제든 | 현황표 + 지금 할 일 1개 |
 | `/sync` | PC 바꿀 때 | pull·충돌 해결·push 대행 |
@@ -132,6 +134,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `pwa-release` | manifest·서비스워커 버전·GitHub Pages·Google Play(TWA) |
 | `korean-privacy` | 동의·서명·보관·처리방침·Play 데이터 안전 |
 | `git-two-pc` | 두 PC 작업, 충돌, 되돌리기 |
+| `plan-gate` | 계획 승인이 필수인 작업 판정 기준과 계획서 양식 |
 
 ### 훅 (항상 켜져 있음)
 | 때 | 하는 일 |
@@ -166,10 +169,17 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 ## 5. 매일: 기능·버그·배포
 ```
 claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 → /sync
-/status           ← 오늘 할 일 확인
-/feature …        ← 또는 /fix …
+/status           ← 오늘 할 일 확인 (승인 대기 계획도 보임)
+/plan …           ← 선택. 구현 없이 계획서만 먼저 보고 싶을 때
+/feature …        ← 또는 /fix …  (위험한 작업은 계획서를 보여 주고 "승인" 을 기다림)
 /ship             ← 폰 점검표 확인 후 배포
 ```
+
+### 계획 먼저 (승인이 필요한 때)
+개인정보·서버(Supabase)·삭제·결제·로그인·배포 설정·큰 변경이 걸리면 `/feature` `/fix` 가 **구현 전에 계획서를 만들고 멈춥니다.** 요약을 읽고 `승인` 이라고 답하면 그때 구현합니다. 고칠 곳이 있으면 번호로 알려 주세요.
+- 직접 계획부터 받고 싶으면 `/plan 하려는 일`.
+- 승인된 계획으로 구현: `/feature 계획: docs/PLANS/파일이름.md`
+- Claude Code 기본 기능도 있습니다: `Shift+Tab` 으로 Plan 모드(읽기만 하는 모드)로 바꾸면 승인 전까지 아무것도 고치지 않습니다.
 
 ## 6. 기존 앱 가져오기 (예: posture-check)
 ```powershell
