@@ -141,9 +141,9 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 |----|--------|
 | Claude Code 켤 때 | 다른 PC 에서 올린 변경이 있으면 `git pull` 하라고 알림 |
 | 명령 실행 전 | 폴더 통째 삭제·강제 push·작업 버리기 등 되돌릴 수 없는 명령 차단 |
-| 커밋 직전 | `.env`·키 파일·5MB 이상 파일이 섞여 있으면 차단 |
+| 커밋 직전 | `.env`·키 파일·5MB 이상 파일, 커밋 내용 속 비밀키, `.claude/pii-names.local.txt` 에 적은 실제 회원 이름이 있으면 차단 (이름 목록 파일은 PC 에만 두고 git 에 안 올라감) |
 | 파일 쓰기 전 | API 키·service_role 키가 코드에 들어가면 차단 |
-| 파일 쓴 직후 | js 문법·json 형식·html 태그 짝 검사 → 틀리면 즉시 고치게 |
+| 파일 쓴 직후 | js 문법·json 형식·html 태그 짝 + html 안 `<script>` 문법 검사 → 틀리면 즉시 고치게 |
 | 작업 마칠 때 | `package.json` 있으면 lint → build → test |
 
 ---

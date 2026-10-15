@@ -38,7 +38,7 @@ if (Test-Path (Join-Path $Target "CLAUDE.md")) {
 
 # .gitignore 에 비밀 파일 규칙 보강
 $gi = Join-Path $Target ".gitignore"
-$rules = @(".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.jks", "*.keystore", "*.aab", "*.apk", ".mcp.json", "phases/**/step*-output.json", "__pycache__/", ".pytest_cache/")
+$rules = @(".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.jks", "*.keystore", "*.aab", "*.apk", ".mcp.json", ".claude/pii-names.local.txt", "phases/**/step*-output.json", "__pycache__/", ".pytest_cache/")
 $existing = if (Test-Path $gi) { Get-Content $gi } else { @() }
 $add = $rules | Where-Object { $existing -notcontains $_ }
 if ($add) { Add-Content $gi ("`n# harness`n" + ($add -join "`n")); $copied += ".gitignore (규칙 " + $add.Count + "개 추가)" }
