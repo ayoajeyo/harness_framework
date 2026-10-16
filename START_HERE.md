@@ -41,6 +41,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | 배포 | `/ship` |
 | 지금 상태 | `/status` |
 | 다른 PC 와 맞추기 | `/sync` |
+| 그만할 때·대화가 길어졌을 때 | `/handoff` → `/clear` |
 | 뭐가 바뀌었는지 | `/explain` |
 
 ---
@@ -79,6 +80,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `docs/BACKLOG.md` | 할 일·아이디어 | `/backlog` |
 | `docs/CHANGELOG.md` | 변경 이력(사용자 말로) | `/ship` 이 씀 |
 | `docs/GLOSSARY.md` | 용어집 | — |
+| `docs/HANDOFF.md` | 인수인계서 — 하던 일·다음 할 일 (최신 하나만) | `/handoff` 가 씀 |
 | `docs/TASTE.md` | 디자인 취향 기록 (좋다·싫다 한 것이 쌓임) | 말하면 AI 가 기록 |
 | `design-system/tokens.css` | 디자인 값(색·글자·여백)과 기본 컴포넌트 CSS | 거의 안 고침 |
 | `design-system/styleguide.html` | 컴포넌트 견본 페이지 (브라우저로 열어 보기) | 새 모양이 필요할 때 추가 |
@@ -86,7 +88,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `scripts/app_capture.py` | **로그인 뒤 화면** 캡처 (테스트 계정, agent-browser) | 그대로 |
 | `.claude/capture.json` | 로그인 캡처할 배포 주소 (비밀값 없음) | 앱마다 한 번 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
-| `.claude/commands/` | 슬래시 명령 16개 | 그대로 |
+| `.claude/commands/` | 슬래시 명령 17개 | 그대로 |
 | `.claude/agents/` | 전문 담당 8명 | 그대로 |
 | `.claude/skills/` | 노하우 12개 | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
@@ -114,6 +116,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `/ship` | 배포 | 점검→버전 4곳→CHANGELOG→폰 점검표→push |
 | `/status` | 언제든 | 현황표 + 지금 할 일 1개 |
 | `/sync` | PC 바꿀 때 | pull·충돌 해결·push 대행 |
+| `/handoff` | 그만할 때, 대화가 길어졌을 때 | 인수인계서(`docs/HANDOFF.md`) 한 장 작성·올리기 → 다음 대화·다른 PC 가 자동으로 이어감 |
 | `/explain` | 궁금할 때 | 최근 변경을 쉬운 말로 |
 | `/design 화면` | 화면 모양을 정할 때 | 시안 2~3개를 만들어 나란히 비교 → 고른 이유를 TASTE.md 에 기록. 앱 코드는 안 건드림 |
 | `/review` | 수동 검토 | 규칙 준수 점검표 |
@@ -124,6 +127,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `/rollback 문제` | 배포 후 사고 | 마지막 배포 되돌리고 새 버전으로 재배포 |
 
 ### 에이전트 (명령어가 알아서 부름. "architect 로 설계해줘" 처럼 직접 불러도 됨)
+`ui-checker`·`docs-keeper`·`tester` 는 규칙 대조가 주 일이라 **Sonnet** 으로 고정(토큰 절약). 나머지는 지금 고른 모델을 따른다.
 | 이름 | 역할 | 코드 수정 |
 |------|------|---------|
 | `architect` | 설계안·단계 쪼개기·ADR 제안 | ✗ |
@@ -209,6 +213,17 @@ claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 �
   python scripts/app_capture.py login     # 창이 뜨면 '테스트 계정'으로 로그인 → Enter
   ```
   실제 회원이 있는 계정으로 로그인하지 마세요. 확인: `python scripts/app_capture.py status` · 지우기: `… forget`
+
+### 토큰 아끼기 (사용량 한도 덜 쓰기)
+AI 는 대화가 길수록 앞 내용을 매번 다시 읽어서 같은 질문도 점점 비싸집니다.
+| 언제 | 할 일 | 효과 |
+|------|------|------|
+| 평소 | `/model opusplan` 한 번 (계속 유지됨) | Plan 모드(`Shift+Tab`)에서만 Opus 로 설계, 코드 작성은 Sonnet |
+| 큰 기능 시작 | `Shift+Tab` 으로 Plan 모드 → 계획 → 승인 → 실행 | 비싼 두뇌는 설계에만 |
+| 한 기능이 끝날 때 | `/handoff` → `/clear` | 긴 대화 대신 인수인계서 한 장으로 다음 작업 |
+| 대화가 길어졌는데 같은 일을 계속 | `/compact` | 대화를 요약해 줄임 (중요한 결정은 `/handoff` 가 더 안전) |
+| PC 를 바꿀 때 | `/handoff` (자동으로 올림) → 다른 PC 에서 `git pull` → `claude` | 켜자마자 "이어서 할 일" 이 뜸 |
+- 검토·점검 같은 일은 명령어가 **서브에이전트**(별도 AI)에게 맡기고 요약만 받아서 메인 대화가 가볍게 유지됩니다. 직접 할 일은 없습니다.
 
 ### 계획 먼저 (승인이 필요한 때)
 개인정보·서버(Supabase)·삭제·결제·로그인·배포 설정·큰 변경이 걸리면 `/feature` `/fix` 가 **구현 전에 계획서를 만들고 멈춥니다.** 요약을 읽고 `승인` 이라고 답하면 그때 구현합니다. 고칠 곳이 있으면 번호로 알려 주세요.
