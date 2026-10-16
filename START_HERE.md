@@ -83,10 +83,12 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `design-system/tokens.css` | 디자인 값(색·글자·여백)과 기본 컴포넌트 CSS | 거의 안 고침 |
 | `design-system/styleguide.html` | 컴포넌트 견본 페이지 (브라우저로 열어 보기) | 새 모양이 필요할 때 추가 |
 | `scripts/screenshot.py` | 폰 크기 화면 캡처 → `.shots/` (git 에 안 올라감) | 그대로 |
+| `scripts/app_capture.py` | **로그인 뒤 화면** 캡처 (테스트 계정, agent-browser) | 그대로 |
+| `.claude/capture.json` | 로그인 캡처할 배포 주소 (비밀값 없음) | 앱마다 한 번 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
 | `.claude/commands/` | 슬래시 명령 16개 | 그대로 |
 | `.claude/agents/` | 전문 담당 8명 | 그대로 |
-| `.claude/skills/` | 노하우 11개 | 디자인 기본값 바꿀 때만 |
+| `.claude/skills/` | 노하우 12개 | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
 | `scripts/adopt.ps1` | 기존 앱에 하네스 넣기 | 그대로 |
@@ -146,6 +148,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `git-two-pc` | 두 PC 작업, 충돌, 되돌리기 |
 | `plan-gate` | 계획 승인이 필수인 작업 판정 기준과 계획서 양식 |
 | `ui-polish` | 심플하지만 고급스럽게 — 시선 순서·정렬·여백 리듬·글자·마감 점검 10가지 |
+| `app-capture` | 로그인 뒤 화면 캡처 방법과 개인정보 규칙 (테스트 계정만) |
 | `measure-viz` | 측정 데이터 표시 — 숫자 표기·정상 범위 막대·좌우 비교·추이 그래프·사진 위 측정점 |
 
 ### 훅 (항상 켜져 있음)
@@ -199,6 +202,13 @@ claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 �
 - 견본 보기: 앱 폴더에서 `python -m http.server 8000` → 브라우저로 http://localhost:8000/design-system/styleguide.html
 - 직접 사진 찍기: `python scripts/screenshot.py index.html --full` → `.shots/` 폴더에 PNG
 - 화면 캡처 도구(Playwright)가 없는 PC 에서는 사진 없이 코드만 보고 점검합니다. 설치는 0장 표 마지막 줄.
+- **로그인 뒤 화면**(회원 목록·리포트)까지 AI 가 보게 하려면 PC 마다 한 번:
+  ```powershell
+  npm i -g agent-browser
+  agent-browser install
+  python scripts/app_capture.py login     # 창이 뜨면 '테스트 계정'으로 로그인 → Enter
+  ```
+  실제 회원이 있는 계정으로 로그인하지 마세요. 확인: `python scripts/app_capture.py status` · 지우기: `… forget`
 
 ### 계획 먼저 (승인이 필요한 때)
 개인정보·서버(Supabase)·삭제·결제·로그인·배포 설정·큰 변경이 걸리면 `/feature` `/fix` 가 **구현 전에 계획서를 만들고 멈춥니다.** 요약을 읽고 `승인` 이라고 답하면 그때 구현합니다. 고칠 곳이 있으면 번호로 알려 주세요.
