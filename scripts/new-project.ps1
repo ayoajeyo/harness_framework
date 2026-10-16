@@ -22,7 +22,7 @@ if (Test-Path $dest) {
 }
 
 # 틀에만 필요한 것(테스트 캐시, 실행 기록, 로컬 설정)은 복사하지 않는다
-$exclude = @(".git", ".pytest_cache", "__pycache__", "phases", ".mcp.json", ".env", "node_modules")
+$exclude = @(".git", ".pytest_cache", "__pycache__", "phases", ".mcp.json", ".env", "node_modules", ".shots")
 
 New-Item -ItemType Directory -Path $dest | Out-Null
 Get-ChildItem -Path $template -Force |

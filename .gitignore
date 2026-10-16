@@ -25,3 +25,6 @@ __pycache__/
 
 .mcp.json
 .claude/pii-names.local.txt
+
+# 화면 캡처 (scripts/screenshot.py)
+.shots/

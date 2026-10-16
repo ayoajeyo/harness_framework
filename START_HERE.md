@@ -15,6 +15,7 @@ PowerShell(`PS C:\...>` 화면)에서 한 줄씩 입력해 **네 가지 모두 �
 | Python 3.10+ | `python --version` | `winget install Python.Python.3.12 --override "/quiet PrependPath=1"` |
 | Node 20+ (테스트·문법검사용) | `node --version` | `winget install OpenJS.NodeJS.LTS` |
 | Claude Code | `claude --version` | `irm https://claude.ai/install.ps1 \| iex` 후 `claude` 로 로그인 |
+| 화면 캡처 (선택, 디자인 확인용) | 앱 폴더에서 `python scripts/screenshot.py design-system/styleguide.html` → `캡처:` 줄이 나오면 됨 | `python -m pip install playwright` 다음 `python -m playwright install chromium` (약 150MB 내려받음. 병원 방화벽에서 막히면 집 PC 에서만 써도 됨) |
 
 설치 후에는 PowerShell(VS Code 포함)을 **완전히 닫고 다시** 엽니다. 그리고 한 번만:
 ```powershell
@@ -34,6 +35,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | 틀을 고친 뒤 기존 앱들에 반영 | `scripts\update-harness.ps1 앱폴더경로` (도구만 갱신, 문서·코드는 보존) |
 | 배포했는데 망가짐 | `/rollback 무엇이 잘못됐는지` |
 | 기능 하나 추가 | `/feature 기능 설명` |
+| 화면 시안 2~3개 보고 고르기 | `/design 화면 설명` |
+| 화면 더 예쁘게 | `ui-designer 로 {화면} 개선안 줘` |
 | 버그 고치기 | `/fix 어느 화면에서 뭘 했더니 뭐가 잘못됐다` |
 | 배포 | `/ship` |
 | 지금 상태 | `/status` |
@@ -48,8 +51,9 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 |------|---------|
 | 회사 규칙집 | `CLAUDE.md` + `docs/` (AI 가 매번 읽는다) |
 | 업무 지시서 | `/feature` `/fix` 같은 명령어, 큰 작업은 `phases/` 의 step 파일 |
-| 전문 담당자들 | `.claude/agents/` — 설계·테스트·디버그·검토·개인정보·화면·문서 담당 7명 |
-| 사내 노하우 문서 | `.claude/skills/` — 사진·리포트·Supabase·배포·개인정보·git |
+| 전문 담당자들 | `.claude/agents/` — 설계·테스트·디버그·검토·개인정보·화면 점검·화면 디자인·문서 담당 8명 |
+| 사내 노하우 문서 | `.claude/skills/` — 디자인·측정 데이터 표시·사진·리포트·Supabase·배포·개인정보·git·계획 |
+| 디자인 견본 | `design-system/` — 디자인 값(tokens.css)과 컴포넌트 견본(styleguide.html). 새 화면은 여기서 복사 |
 | 자동 안전장치 | `.claude/hooks/` — 위험 명령 차단, 비밀키 차단, 문법 검사, 커밋 전 검사, 다른 PC 변경 알림 |
 | 큰 공사용 자동 실행기 | `scripts/execute.py` — step 을 하나씩 새 AI 세션에 시키고 결과를 기록 |
 
@@ -75,10 +79,14 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `docs/BACKLOG.md` | 할 일·아이디어 | `/backlog` |
 | `docs/CHANGELOG.md` | 변경 이력(사용자 말로) | `/ship` 이 씀 |
 | `docs/GLOSSARY.md` | 용어집 | — |
+| `docs/TASTE.md` | 디자인 취향 기록 (좋다·싫다 한 것이 쌓임) | 말하면 AI 가 기록 |
+| `design-system/tokens.css` | 디자인 값(색·글자·여백)과 기본 컴포넌트 CSS | 거의 안 고침 |
+| `design-system/styleguide.html` | 컴포넌트 견본 페이지 (브라우저로 열어 보기) | 새 모양이 필요할 때 추가 |
+| `scripts/screenshot.py` | 폰 크기 화면 캡처 → `.shots/` (git 에 안 올라감) | 그대로 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
-| `.claude/commands/` | 슬래시 명령 15개 | 그대로 |
-| `.claude/agents/` | 전문 담당 7명 | 그대로 |
-| `.claude/skills/` | 노하우 9개 | 디자인 기본값 바꿀 때만 |
+| `.claude/commands/` | 슬래시 명령 16개 | 그대로 |
+| `.claude/agents/` | 전문 담당 8명 | 그대로 |
+| `.claude/skills/` | 노하우 11개 | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
 | `scripts/adopt.ps1` | 기존 앱에 하네스 넣기 | 그대로 |
@@ -105,6 +113,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `/status` | 언제든 | 현황표 + 지금 할 일 1개 |
 | `/sync` | PC 바꿀 때 | pull·충돌 해결·push 대행 |
 | `/explain` | 궁금할 때 | 최근 변경을 쉬운 말로 |
+| `/design 화면` | 화면 모양을 정할 때 | 시안 2~3개를 만들어 나란히 비교 → 고른 이유를 TASTE.md 에 기록. 앱 코드는 안 건드림 |
 | `/review` | 수동 검토 | 규칙 준수 점검표 |
 | `/privacy` | 개인정보 기능 뒤 | 노출 점검 |
 | `/privacy-policy` | 출시 전 | 개인정보처리방침 페이지 생성 |
@@ -120,7 +129,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `debugger` | 근본 원인 추적 | ✗ |
 | `reviewer` | 버그·규칙 위반 검토 | ✗ |
 | `privacy-guard` | 개인정보·비밀키·동의·RLS 점검 | ✗ |
-| `ui-checker` | 디자인 표준·버튼 단어·4가지 상태 | ✗ |
+| `ui-checker` | 디자인 규칙 위반 점검 (색·버튼 단어·4가지 상태·견본·리포트·취향) | ✗ |
+| `ui-designer` | 화면을 폰 크기로 찍어 보고 "더 좋아질 곳" 개선안 | ✗ |
 | `docs-keeper` | 코드 ↔ 문서 동기화 | 문서만 |
 
 ### 스킬 (AI 가 필요할 때 스스로 읽음)
@@ -135,6 +145,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `korean-privacy` | 동의·서명·보관·처리방침·Play 데이터 안전 |
 | `git-two-pc` | 두 PC 작업, 충돌, 되돌리기 |
 | `plan-gate` | 계획 승인이 필수인 작업 판정 기준과 계획서 양식 |
+| `ui-polish` | 심플하지만 고급스럽게 — 시선 순서·정렬·여백 리듬·글자·마감 점검 10가지 |
+| `measure-viz` | 측정 데이터 표시 — 숫자 표기·정상 범위 막대·좌우 비교·추이 그래프·사진 위 측정점 |
 
 ### 훅 (항상 켜져 있음)
 | 때 | 하는 일 |
@@ -174,6 +186,19 @@ claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 �
 /feature …        ← 또는 /fix …  (위험한 작업은 계획서를 보여 주고 "승인" 을 기다림)
 /ship             ← 폰 점검표 확인 후 배포
 ```
+
+### 디자인 (보기 좋게)
+화면 디자인은 이 순서로 돌아갑니다. 쓸수록 내 취향이 쌓여 다음 화면이 더 잘 맞습니다.
+| 단계 | 무엇 | 도구 |
+|------|------|------|
+| 기준 | 색·글꼴(Pretendard)·여백·버튼 모양 | `docs/UI_GUIDE.md`, `design-system/` |
+| 고르기 | 모양이 고민되면 시안 2~3개 비교 | `/design 화면 설명` |
+| 만들기 | 규칙대로 + 고급스럽게 다듬기 | `clean-ui`·`ui-polish`·`measure-viz` 스킬 (자동) |
+| 확인 | 폰 크기 사진을 찍어 규칙 점검 + 개선안 | `scripts/screenshot.py` → `ui-checker` → `ui-designer` (`/feature` 가 자동) |
+| 기억 | "이건 좋다·싫다" 라고 말하면 기록 | `docs/TASTE.md` |
+- 견본 보기: 앱 폴더에서 `python -m http.server 8000` → 브라우저로 http://localhost:8000/design-system/styleguide.html
+- 직접 사진 찍기: `python scripts/screenshot.py index.html --full` → `.shots/` 폴더에 PNG
+- 화면 캡처 도구(Playwright)가 없는 PC 에서는 사진 없이 코드만 보고 점검합니다. 설치는 0장 표 마지막 줄.
 
 ### 계획 먼저 (승인이 필요한 때)
 개인정보·서버(Supabase)·삭제·결제·로그인·배포 설정·큰 변경이 걸리면 `/feature` `/fix` 가 **구현 전에 계획서를 만들고 멈춥니다.** 요약을 읽고 `승인` 이라고 답하면 그때 구현합니다. 고칠 곳이 있으면 번호로 알려 주세요.

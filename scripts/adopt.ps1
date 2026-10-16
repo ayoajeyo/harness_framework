@@ -26,9 +26,10 @@ function Copy-IfMissing($rel) {
 
 # .claude 는 하위 항목 단위로 (기존 앱에 .claude\settings.local.json 만 있어도 도구가 들어가게)
 foreach ($sub in @("settings.json", "hooks", "commands", "agents", "skills")) { Copy-IfMissing (Join-Path ".claude" $sub) }
-foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example")) { Copy-IfMissing $rel }
+foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\screenshot.py", "scripts\test_screenshot.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example")) { Copy-IfMissing $rel }
 foreach ($doc in Get-ChildItem (Join-Path $template "docs") -Filter *.md) { Copy-IfMissing ("docs\" + $doc.Name) }
 Copy-IfMissing "docs\PLANS\README.md"
+Copy-IfMissing "design-system"   # 참고용 견본. 자기 CSS 가 있는 앱에는 걸지 않는다 (clean-ui 스킬 "기존 앱")
 
 # CLAUDE.md 가 이미 있으면 옆에 참고본으로
 if (Test-Path (Join-Path $Target "CLAUDE.md")) {
@@ -38,7 +39,7 @@ if (Test-Path (Join-Path $Target "CLAUDE.md")) {
 
 # .gitignore 에 비밀 파일 규칙 보강
 $gi = Join-Path $Target ".gitignore"
-$rules = @(".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.jks", "*.keystore", "*.aab", "*.apk", ".mcp.json", ".claude/pii-names.local.txt", "phases/**/step*-output.json", "__pycache__/", ".pytest_cache/")
+$rules = @(".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.jks", "*.keystore", "*.aab", "*.apk", ".mcp.json", ".claude/pii-names.local.txt", "phases/**/step*-output.json", "__pycache__/", ".pytest_cache/", ".shots/")
 $existing = if (Test-Path $gi) { Get-Content $gi } else { @() }
 $add = $rules | Where-Object { $existing -notcontains $_ }
 if ($add) { Add-Content $gi ("`n# harness`n" + ($add -join "`n")); $copied += ".gitignore (규칙 " + $add.Count + "개 추가)" }
