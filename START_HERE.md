@@ -88,10 +88,11 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `scripts/app_capture.py` | **로그인 뒤 화면** 캡처 (테스트 계정, agent-browser) | 그대로 |
 | `.claude/capture.json` | 로그인 캡처할 배포 주소 (비밀값 없음) | 앱마다 한 번 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
-| `.claude/commands/` | 슬래시 명령 17개 | 그대로 |
+| `.claude/commands/` | 슬래시 명령 21개 | 그대로 |
 | `.claude/agents/` | 전문 담당 8명 | 그대로 |
-| `.claude/skills/` | 노하우 12개 | 디자인 기본값 바꿀 때만 |
+| `.claude/skills/` | 노하우 14개 | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
+| `THIRD_PARTY_NOTICES.md` | 가져온 외부 스킬의 출처·라이선스(MIT) | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
 | `scripts/adopt.ps1` | 기존 앱에 하네스 넣기 | 그대로 |
 | `scripts/update-harness.ps1` | 기존 앱의 하네스 도구를 최신 틀로 갱신 | 그대로 |
@@ -118,6 +119,10 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `/sync` | PC 바꿀 때 | pull·충돌 해결·push 대행 |
 | `/handoff` | 그만할 때, 대화가 길어졌을 때 | 인수인계서(`docs/HANDOFF.md`) 한 장 작성·올리기 → 다음 대화·다른 PC 가 자동으로 이어감 |
 | `/explain` | 궁금할 때 | 최근 변경을 쉬운 말로 |
+| `/wait-what` | 방금 AI 설명이 이해 안 될 때 | 같은 내용을 더 쉬운 말·비유로 다시 |
+| `/grill-with-docs 계획` | 큰 기능 전, 생각 정리 | 질문 라운드로 빈틈 찾기 + 앱 용어·결정을 용어집·ADR 에 기록 |
+| `/improve-codebase-architecture` | 파일이 너무 커졌을 때, 몇 주에 한 번 | 구조 정리 후보를 그림 보고서로 → 고른 것을 질문으로 다듬어 `/plan` 으로 |
+| `/retro` | 작업이 끝난 뒤 | AI 가 헤맨 곳을 찾아 하네스 고칠 점을 심각한 순서로 제안 |
 | `/design 화면` | 화면 모양을 정할 때 | 시안 2~3개를 만들어 나란히 비교 → 고른 이유를 TASTE.md 에 기록. 앱 코드는 안 건드림 |
 | `/review` | 수동 검토 | 규칙 준수 점검표 |
 | `/privacy` | 개인정보 기능 뒤 | 노출 점검 |
@@ -152,6 +157,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `git-two-pc` | 두 PC 작업, 충돌, 되돌리기 |
 | `plan-gate` | 계획 승인이 필수인 작업 판정 기준과 계획서 양식 |
 | `ui-polish` | 심플하지만 고급스럽게 — 시선 순서·정렬·여백 리듬·글자·마감 점검 10가지 |
+| `doc-grilling` | 질문 라운드로 다듬기 + 용어집·ADR 기록 방법 |
+| `codebase-design` | 코드 구조 정리의 말과 원칙 (깊은 모듈·이음매·삭제 시험) |
 | `app-capture` | 로그인 뒤 화면 캡처 방법과 개인정보 규칙 (테스트 계정만) |
 | `measure-viz` | 측정 데이터 표시 — 숫자 표기·정상 범위 막대·좌우 비교·추이 그래프·사진 위 측정점 |
 
