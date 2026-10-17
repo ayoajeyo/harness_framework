@@ -28,3 +28,6 @@ __pycache__/
 
 # 화면 캡처 (scripts/screenshot.py)
 .shots/
+
+# Archify 구조도 (공개 저장소에 올리지 않음)
+.archify/

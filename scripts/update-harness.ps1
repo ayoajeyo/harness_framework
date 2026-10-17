@@ -41,7 +41,7 @@ foreach ($rel in @("docs\PLANS\README.md", "design-system")) {
 }
 # .gitignore 규칙 보강 (화면 캡처 .shots/ 가 GitHub 에 올라가지 않게 등)
 $gi = Join-Path $Target ".gitignore"
-$rules = @(".env", ".env.*", "!.env.example", ".mcp.json", ".claude/pii-names.local.txt", "__pycache__/", ".pytest_cache/", ".shots/")
+$rules = @(".env", ".env.*", "!.env.example", ".mcp.json", ".claude/pii-names.local.txt", "__pycache__/", ".pytest_cache/", ".shots/", ".archify/")
 $existing = if (Test-Path $gi) { Get-Content $gi } else { @() }
 $add = $rules | Where-Object { $existing -notcontains $_ }
 if ($add) { Add-Content $gi ("`n# harness`n" + ($add -join "`n")); Write-Host ("  보강: .gitignore 규칙 " + $add.Count + "개") }

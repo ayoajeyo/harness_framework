@@ -221,6 +221,13 @@ claude            ← 켜면 훅이 "pull 하세요" 를 알려줄 수 있음 �
   ```
   실제 회원이 있는 계정으로 로그인하지 마세요. 확인: `python scripts/app_capture.py status` · 지우기: `… forget`
 
+### 구조도 (선택: Archify)
+코드나 업무 흐름을 눌러 보는 그림(HTML)으로 보고 싶을 때. PC 에 한 번만 설치합니다(Node 필요, 하네스 안에는 넣지 않음):
+```powershell
+npx skills add tt-a1i/archify -g
+```
+쓰기: Claude Code 에서 `Archify로 측정 → 저장 → 리포트 흐름을 그려줘`. 그림은 `.archify/` 에 저장되고 GitHub 에는 올라가지 않습니다(.gitignore). 업데이트 확인 통신은 하네스 설정에서 꺼 두었습니다.
+
 ### 토큰 아끼기 (사용량 한도 덜 쓰기)
 AI 는 대화가 길수록 앞 내용을 매번 다시 읽어서 같은 질문도 점점 비싸집니다.
 | 언제 | 할 일 | 효과 |
