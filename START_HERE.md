@@ -32,7 +32,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 |---|---|
 | 새 앱 시작 | PowerShell 에서 `scripts\new-project.ps1 앱이름` → 안내된 폴더에서 `claude` → `/start 앱 한 줄 설명` |
 | 이미 만든 앱을 이 틀로 | PowerShell 에서 `scripts\adopt.ps1 앱폴더경로` → 그 폴더에서 `claude` → `/adopt` |
-| 틀을 고친 뒤 기존 앱들에 반영 | `scripts\update-harness.ps1 앱폴더경로` (도구만 갱신, 문서·코드는 보존) |
+| 틀을 고친 뒤 기존 앱들에 반영 | `scripts\update-harness.ps1 앱폴더경로` (도구만 갱신, 문서·코드는 보존 · 앱에 맞게 고친 명령·스킬은 그 앱의 `.claude\harness-keep.txt` 에 적어 두면 지킴) |
 | 배포했는데 망가짐 | `/rollback 무엇이 잘못됐는지` |
 | 기능 하나 추가 | `/feature 기능 설명` |
 | 화면 시안 2~3개 보고 고르기 | `/design 화면 설명` |
@@ -86,11 +86,13 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `design-system/styleguide.html` | 컴포넌트 견본 페이지 (브라우저로 열어 보기) | 새 모양이 필요할 때 추가 |
 | `scripts/screenshot.py` | 폰 크기 화면 캡처 → `.shots/` (git 에 안 올라감) | 그대로 |
 | `scripts/app_capture.py` | **로그인 뒤 화면** 캡처 (테스트 계정, agent-browser) | 그대로 |
+| `scripts/browser_check.py` | 시나리오(JSON) 대로 앱을 실제 브라우저에서 움직여 **기능이 끝까지 되는지** 확인 (가짜 자료 넣기·버튼·파일 내려받기) | 그대로 |
+| `.claude/harness-keep.txt` (앱에만, 선택) | `update-harness` 가 덮어쓰지 말아야 할 앱 전용 명령·스킬 목록 | 앱에 맞게 고칠 때 |
 | `.claude/capture.json` | 로그인 캡처할 배포 주소 (비밀값 없음) | 앱마다 한 번 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
 | `.claude/commands/` | 슬래시 명령 21개 | 그대로 |
 | `.claude/agents/` | 전문 담당 11명 (8명 + 부를 때만 3명) | 그대로 |
-| `.claude/skills/` | 노하우 32개 (기본 14 + 외부 18: Superpowers·UI UX Pro Max·Caveman) | 디자인 기본값 바꿀 때만 |
+| `.claude/skills/` | 노하우 34개 (기본 16 + 외부 18: Superpowers·UI UX Pro Max·Caveman) | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `THIRD_PARTY_NOTICES.md` | 가져온 외부 스킬의 출처·라이선스(MIT) | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
@@ -164,6 +166,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `codebase-design` | 코드 구조 정리의 말과 원칙 (깊은 모듈·이음매·삭제 시험) |
 | `app-capture` | 로그인 뒤 화면 캡처 방법과 개인정보 규칙 (테스트 계정만) |
 | `measure-viz` | 측정 데이터 표시 — 숫자 표기·정상 범위 막대·좌우 비교·추이 그래프·사진 위 측정점 |
+| `browser-check` | 기능이 실제 브라우저에서 끝까지 되는지 시나리오 한 장으로 확인 (`scripts/browser_check.py`) |
+| `data-migration` | 저장 형식을 바꿀 때 기존 회원 자료를 지키는 규칙 — 바꾸면 안 되는 이름·예전 자료 '모름' 처리·빈 값·예전 자료로 시험 |
 
 **외부 스킬** (출처 `THIRD_PARTY_NOTICES.md`)
 | 언제 | 스킬 |
@@ -272,7 +276,7 @@ powershell -ExecutionPolicy Bypass -File scripts\adopt.ps1 $HOME\Documents\postu
 실행기 사전 점검(빈칸·미커밋·claude 설치)을 건너뛰려면 `--skip-preflight`. 한 step 이 30분을 넘기면 자동 중단되어 `error` 로 기록된다.
 
 ## 7-1. 틀 자체를 고쳤을 때
-틀(`harness_framework`)의 훅·명령·스킬을 고쳤다면 → 틀 폴더에서 커밋·push → 각 앱 폴더에 `scripts\update-harness.ps1 앱경로` 로 반영. 문서와 코드는 건드리지 않고 도구만 바뀐다.
+틀(`harness_framework`)의 훅·명령·스킬을 고쳤다면 → 틀 폴더에서 커밋·push → 각 앱 폴더에 `scripts\update-harness.ps1 앱경로` 로 반영. 문서와 코드는 건드리지 않고 도구만 바뀐다. 앱에 맞게 고친 명령·스킬이 있으면 먼저 그 앱의 `.claude\harness-keep.txt` 에 한 줄씩 적어 둔다(예: `.claude\commands\ship.md`) — 적지 않은 것은 틀 것으로 바뀐다.
 
 ---
 

@@ -26,7 +26,7 @@ function Copy-IfMissing($rel) {
 
 # .claude 는 하위 항목 단위로 (기존 앱에 .claude\settings.local.json 만 있어도 도구가 들어가게)
 foreach ($sub in @("settings.json", "hooks", "commands", "agents", "skills")) { Copy-IfMissing (Join-Path ".claude" $sub) }
-foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\screenshot.py", "scripts\test_screenshot.py", "scripts\app_capture.py", "scripts\test_app_capture.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example", "THIRD_PARTY_NOTICES.md")) { Copy-IfMissing $rel }
+foreach ($rel in @("scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\screenshot.py", "scripts\test_screenshot.py", "scripts\app_capture.py", "scripts\test_app_capture.py", "scripts\browser_check.py", "scripts\test_browser_check.py", "scripts\update-harness.ps1", ".env.example", ".mcp.json.example", "THIRD_PARTY_NOTICES.md")) { Copy-IfMissing $rel }
 foreach ($doc in Get-ChildItem (Join-Path $template "docs") -Filter *.md) { Copy-IfMissing ("docs\" + $doc.Name) }
 Copy-IfMissing "docs\PLANS\README.md"
 Copy-IfMissing "design-system"   # 참고용 견본. 자기 CSS 가 있는 앱에는 걸지 않는다 (clean-ui 스킬 "기존 앱")

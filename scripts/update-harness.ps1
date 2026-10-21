@@ -3,6 +3,8 @@
 덮어쓰는 것: .claude\hooks, commands, agents, skills, settings.json, scripts\execute.py, screenshot.py, test_*.py, update-harness.ps1
 없을 때만 추가: docs\ 의 새 문서, design-system\ (참고용 견본), .gitignore 규칙
 건드리지 않는 것: CLAUDE.md, 기존 docs\, 앱 코드, phases\, .claude\settings.local.json
+지키는 것: 대상 앱의 .claude\harness-keep.txt 에 적은 파일·폴더 (앱에 맞게 고친 명령·스킬, 앱에만 있는 스킬·에이전트)
+  예) .claude\commands\ship.md   /   .claude\skills\우리앱-전용-스킬
 
 사용법:  powershell -ExecutionPolicy Bypass -File scripts\update-harness.ps1 C:\Users\USER\Documents\posture-check
 (틀 폴더에서 먼저 git pull 로 틀을 최신으로 만든 뒤 실행)
@@ -18,8 +20,24 @@ if (-not (Test-Path (Join-Path $Target ".claude"))) { Write-Error "하네스가 
 $dirty = git -C $Target status --porcelain
 if ($dirty) { Write-Error "저장(커밋)하지 않은 변경이 있습니다. 먼저 커밋한 뒤 실행하세요 (문제 생기면 git checkout 으로 되돌릴 수 있게)." }
 
+# 앱에서 고친 파일 지키기: 덮어쓰기 전에 따로 두었다가 마지막에 되돌려 놓는다
+$keepFile = Join-Path $Target ".claude\harness-keep.txt"
+$keep = @()
+if (Test-Path $keepFile) {
+    $keep = Get-Content $keepFile -Encoding UTF8 | ForEach-Object { $_.Trim() } | Where-Object { $_ -and -not $_.StartsWith("#") } | ForEach-Object { $_ -replace '/', '\' }
+}
+$stash = Join-Path ([IO.Path]::GetTempPath()) ("harness-keep-" + [guid]::NewGuid().ToString("N"))
+foreach ($k in $keep) {
+    $p = Join-Path $Target $k
+    if (Test-Path $p) {
+        $d = Join-Path $stash $k
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $d) | Out-Null
+        Copy-Item $p $d -Recurse -Force
+    } else { Write-Host "  (지킬 목록에 있지만 없음: $k)" }
+}
+
 $items = @(".claude\hooks", ".claude\commands", ".claude\agents", ".claude\skills", ".claude\settings.json",
-           "scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\screenshot.py", "scripts\test_screenshot.py", "scripts\app_capture.py", "scripts\test_app_capture.py", "scripts\update-harness.ps1", "THIRD_PARTY_NOTICES.md")
+           "scripts\execute.py", "scripts\test_execute.py", "scripts\test_hooks.py", "scripts\test_structure.py", "scripts\screenshot.py", "scripts\test_screenshot.py", "scripts\app_capture.py", "scripts\test_app_capture.py", "scripts\browser_check.py", "scripts\test_browser_check.py", "scripts\update-harness.ps1", "THIRD_PARTY_NOTICES.md")
 foreach ($rel in $items) {
     $src = Join-Path $template $rel; $dst = Join-Path $Target $rel
     if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
@@ -27,6 +45,16 @@ foreach ($rel in $items) {
     Copy-Item $src $dst -Recurse -Force
     Write-Host "  갱신: $rel"
 }
+foreach ($k in $keep) {
+    $d = Join-Path $stash $k; $p = Join-Path $Target $k
+    if (Test-Path $d) {
+        if (Test-Path $p) { Remove-Item $p -Recurse -Force }
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $p) | Out-Null
+        Copy-Item $d $p -Recurse -Force
+        Write-Host "  지킴: $k"
+    }
+}
+if (Test-Path $stash) { Remove-Item $stash -Recurse -Force }
 # 새 문서 틀은 없는 것만 추가 (기존 문서는 보존)
 foreach ($doc in Get-ChildItem (Join-Path $template "docs") -Filter *.md) {
     $dst = Join-Path $Target ("docs\" + $doc.Name)

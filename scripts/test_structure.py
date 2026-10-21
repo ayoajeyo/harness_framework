@@ -183,3 +183,14 @@ def test_archify_output_not_committed():
     import json
     env = json.loads((CLAUDE / "settings.json").read_text(encoding="utf-8")).get("env", {})
     assert env.get("ARCHIFY_UPDATE_CHECK_DISABLED") == "1"
+
+
+def test_update_harness_keeps_app_files():
+    """update-harness 가 앱에서 고친 명령·스킬(harness-keep.txt)을 덮어쓰지 않는다."""
+    p = ROOT / "scripts" / "update-harness.ps1"
+    if not p.exists():
+        pytest.skip("update-harness.ps1 없음")
+    text = p.read_text(encoding="utf-8-sig")
+    assert "harness-keep.txt" in text
+    assert text.index("$stash") < text.index("$items = @(")   # 덮어쓰기 전에 따로 둔다
+    assert "지킴:" in text
