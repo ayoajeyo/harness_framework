@@ -45,6 +45,11 @@
 **이유**: 카메라·터치·인쇄는 자동화 비용이 너무 크다. 로직은 자동화 비용이 거의 없다.
 **트레이드오프**: 화면 회귀(예전 버그 재발)를 사람이 잡아야 한다.
 
+### ADR-000-8: 외부 스킬·에이전트는 골라서 저장소에 넣고, 하네스와 겹치는 것은 부를 때만
+**결정**: Superpowers 13개(시작 훅·using-superpowers 제외), UI UX Pro Max 1개, Caveman 4개를 `.claude/skills/` 에, claude-code-templates 의 점검 에이전트 3개(a11y·speed·supabase)를 한국어로 옮겨 `.claude/agents/` 에 넣는다. 하네스 흐름과 겹치는 스킬은 `disable-model-invocation: true` 로 사용자가 부를 때만, 점검 에이전트 3개도 부를 때만. 출처·라이선스는 `THIRD_PARTY_NOTICES.md` 와 각 폴더 `LICENSE`.
+**이유**: 클라우드 작업 공간은 대화가 끝나면 사라지므로 저장소에 있어야 어느 PC·클라우드에서든 남는다. 통째 설치·시작 훅은 `/feature`·`/fix`·`/ship` 과 부딪히고 외부 최신 코드를 바로 실행한다.
+**트레이드오프**: 원본이 바뀌어도 자동으로 안 따라온다(필요하면 다시 복사). 저장소가 약 4MB 커진다.
+
 ---
 
 ## 이 프로젝트의 ADR

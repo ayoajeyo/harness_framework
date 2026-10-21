@@ -52,7 +52,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 |------|---------|
 | 회사 규칙집 | `CLAUDE.md` + `docs/` (AI 가 매번 읽는다) |
 | 업무 지시서 | `/feature` `/fix` 같은 명령어, 큰 작업은 `phases/` 의 step 파일 |
-| 전문 담당자들 | `.claude/agents/` — 설계·테스트·디버그·검토·개인정보·화면 점검·화면 디자인·문서 담당 8명 |
+| 전문 담당자들 | `.claude/agents/` — 설계·테스트·디버그·검토·개인정보·화면 점검·화면 디자인·문서 담당 8명 + 부를 때만 쓰는 점검 3명(접근성·속도·서버 보안) |
 | 사내 노하우 문서 | `.claude/skills/` — 디자인·측정 데이터 표시·사진·리포트·Supabase·배포·개인정보·git·계획 |
 | 디자인 견본 | `design-system/` — 디자인 값(tokens.css)과 컴포넌트 견본(styleguide.html). 새 화면은 여기서 복사 |
 | 자동 안전장치 | `.claude/hooks/` — 위험 명령 차단, 비밀키 차단, 문법 검사, 커밋 전 검사, 다른 PC 변경 알림 |
@@ -89,8 +89,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `.claude/capture.json` | 로그인 캡처할 배포 주소 (비밀값 없음) | 앱마다 한 번 |
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
 | `.claude/commands/` | 슬래시 명령 21개 | 그대로 |
-| `.claude/agents/` | 전문 담당 8명 | 그대로 |
-| `.claude/skills/` | 노하우 14개 | 디자인 기본값 바꿀 때만 |
+| `.claude/agents/` | 전문 담당 11명 (8명 + 부를 때만 3명) | 그대로 |
+| `.claude/skills/` | 노하우 32개 (기본 14 + 외부 18: Superpowers·UI UX Pro Max·Caveman) | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `THIRD_PARTY_NOTICES.md` | 가져온 외부 스킬의 출처·라이선스(MIT) | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
@@ -143,6 +143,9 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `ui-checker` | 디자인 규칙 위반 점검 (색·버튼 단어·4가지 상태·견본·리포트·취향) | ✗ |
 | `ui-designer` | 화면을 폰 크기로 찍어 보고 "더 좋아질 곳" 개선안 | ✗ |
 | `docs-keeper` | 코드 ↔ 문서 동기화 | 문서만 |
+| `a11y-checker` | 접근성(글자 대비·크기·터치 영역·화면 읽기 이름표) 점검 — "접근성 점검" 이라고 부를 때만 | ✗ |
+| `speed-checker` | 폰 속도(LCP·INP·CLS) 점검과 개선 순서 — "속도 점검" 이라고 부를 때만 | ✗ |
+| `supabase-checker` | 서버 표·보안 규칙(RLS)·함수·버킷 점검 — "서버 점검" 이라고 부를 때만 | ✗ |
 
 ### 스킬 (AI 가 필요할 때 스스로 읽음)
 | 이름 | 내용 |
@@ -161,6 +164,12 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `codebase-design` | 코드 구조 정리의 말과 원칙 (깊은 모듈·이음매·삭제 시험) |
 | `app-capture` | 로그인 뒤 화면 캡처 방법과 개인정보 규칙 (테스트 계정만) |
 | `measure-viz` | 측정 데이터 표시 — 숫자 표기·정상 범위 막대·좌우 비교·추이 그래프·사진 위 측정점 |
+
+**외부 스킬** (출처 `THIRD_PARTY_NOTICES.md`)
+| 언제 | 스킬 |
+|------|------|
+| 상황이 맞으면 자동 | `systematic-debugging`(원인부터 찾기) · `test-driven-development`(테스트 먼저) · `verification-before-completion`(완료라고 말하기 전 확인) · `receiving-code-review`(리뷰 받아 반영) · `dispatching-parallel-agents`(독립 작업 동시에) · `writing-skills`(스킬 만들기) |
+| `/이름` 으로 부를 때만 | `brainstorming` · `writing-plans` · `executing-plans` · `subagent-driven-development` · `using-git-worktrees` · `finishing-a-development-branch` · `requesting-code-review` · `ui-ux-pro-max`(디자인 자료집 — 결과는 UI_GUIDE·TASTE 에 맞춰 고름) · `caveman`·`ultracave`·`megacave`·`caveman-help`(짧은 말투로 토큰 절약) |
 
 ### 훅 (항상 켜져 있음)
 | 때 | 하는 일 |

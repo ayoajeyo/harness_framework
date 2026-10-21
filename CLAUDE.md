@@ -24,7 +24,7 @@
 - 메뉴·버튼 아래 중복 설명 문구는 넣지 않는다.
 - 인쇄·공유용 리포트는 A4 여러 장으로 나뉘게 만든다.
 - 앱 하단이나 리포트 끝에 제작자 표기 `made by AYOAJEYO`를 작게 넣는다.
-- 이 저장소의 화면 작업은 `docs/UI_GUIDE.md`·`docs/TASTE.md`와 `clean-ui`·`ui-polish`·`measure-viz` 스킬만 따른다. 사용자 계정에 있는 일반 디자인 스킬(design-taste-frontend, frontend-taste, frontend-design-guideline, frontend-component-collection, design-md-reference, ui-ux-pro-max, image-to-code, frontend-design 등)은 이 저장소에서 쓰지 않는다. 방향이 서로 달라 결과가 흔들리기 때문이다.
+- 이 저장소의 화면 작업은 `docs/UI_GUIDE.md`·`docs/TASTE.md`와 `clean-ui`·`ui-polish`·`measure-viz` 스킬만 따른다. 사용자 계정에 있는 일반 디자인 스킬(design-taste-frontend, frontend-taste, frontend-design-guideline, frontend-component-collection, design-md-reference, image-to-code, frontend-design 등)은 이 저장소에서 쓰지 않는다. 방향이 서로 달라 결과가 흔들리기 때문이다. 예외: 저장소에 넣은 `ui-ux-pro-max` 는 사용자가 `/ui-ux-pro-max` 로 직접 부를 때만 쓴다(자동 사용 안 함). 그때도 결과는 UI_GUIDE·TASTE 에 맞춰 고른다.
 - 화면을 만들기 전에 `docs/TASTE.md`(사용자 디자인 취향)를 읽고, 버튼·카드 같은 모양은 `design-system/styleguide.html` 견본에서 복사한다.
 - 사용자가 디자인에 대해 "좋다·싫다·이렇게" 라고 말하면 그 자리에서 `docs/TASTE.md` 에 기록한다.
 
@@ -47,8 +47,10 @@
 - {일반 규칙 (예: 계산 로직은 js/logic/ 폴더에 분리)}
 
 ## 개발 프로세스
+- 토큰 절약: 검토 에이전트는 변경 크기에 맞춰 쓴다. 문구·CSS·주석 몇 줄 = 검토 에이전트 없이 테스트·문법 검사만. 화면 한 곳 = `ui-checker` 하나. 계산·데이터·개인정보·서버 = `reviewer` + `privacy-guard`(이때만). `/ship` 의 privacy-guard·ui-checker 는 지난 배포 뒤 바뀐 파일만 보게 범위를 좁힌다. 큰 파일은 통째로 읽지 말고 grep 으로 필요한 줄만 읽는다.
 - 계산·변환처럼 결과가 정해진 로직은 `js/logic/` 에 두고 테스트를 먼저 작성한다 (TDD, `docs/TESTING.md`).
-- 설계는 `architect`, 테스트는 `tester`, 원인 분석은 `debugger`, 검토는 `reviewer`, 개인정보는 `privacy-guard`, 화면 규칙 점검은 `ui-checker`, 화면 개선안은 `ui-designer`, 문서 동기화는 `docs-keeper` 에이전트.
+- 설계는 `architect`, 테스트는 `tester`, 원인 분석은 `debugger`, 검토는 `reviewer`, 개인정보는 `privacy-guard`, 화면 규칙 점검은 `ui-checker`, 화면 개선안은 `ui-designer`, 문서 동기화는 `docs-keeper` 에이전트. 접근성 점검은 `a11y-checker`, 폰 속도 점검은 `speed-checker`, 서버(Supabase) 보안 점검은 `supabase-checker` — 셋 다 사용자가 부를 때만.
+- 외부 스킬(Superpowers·Caveman): 디버깅(`systematic-debugging`)·TDD(`test-driven-development`)·완료 전 확인(`verification-before-completion`)·리뷰 받기(`receiving-code-review`)·병렬 작업(`dispatching-parallel-agents`)·스킬 작성(`writing-skills`) 6개는 상황이 맞으면 자동으로 쓴다. 브레인스토밍·계획·실행·worktree·브랜치 마무리·리뷰 요청은 `/brainstorming` 처럼 사용자가 부를 때만 — 평소 흐름은 `/feature`·`/fix`·`/ship` 이 우선. Caveman(짧은 말투)도 `/caveman` 으로 부를 때만.
 - 화면 시안이 여러 가지로 가능하면 `/design` 으로 2~3개를 만들어 사용자가 고르게 한다.
 - 버전은 네 곳(APP_VERSION · manifest · sw.js CACHE_VERSION · CHANGELOG)을 `/ship` 이 함께 올린다.
 
