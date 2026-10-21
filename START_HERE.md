@@ -174,8 +174,9 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 **외부 스킬** (출처 `THIRD_PARTY_NOTICES.md`)
 | 언제 | 스킬 |
 |------|------|
+| 큰 기능일 때만 자동 | `brainstorming`(만들기 전에 질문으로 원하는 것 분명히 → `docs/PLANS/` 계획서 → 승인 뒤 `/feature`) |
 | 상황이 맞으면 자동 | `systematic-debugging`(원인부터 찾기) · `test-driven-development`(테스트 먼저) · `verification-before-completion`(완료라고 말하기 전 확인) · `receiving-code-review`(리뷰 받아 반영) · `dispatching-parallel-agents`(독립 작업 동시에) · `writing-skills`(스킬 만들기) |
-| `/이름` 으로 부를 때만 | `brainstorming` · `writing-plans` · `executing-plans` · `subagent-driven-development` · `using-git-worktrees` · `finishing-a-development-branch` · `requesting-code-review` · `ui-ux-pro-max`(디자인 자료집 — 결과는 UI_GUIDE·TASTE 에 맞춰 고름) · `caveman`·`ultracave`·`megacave`·`caveman-help`(짧은 말투로 토큰 절약) |
+| `/이름` 으로 부를 때만 | `writing-plans` · `executing-plans` · `subagent-driven-development` · `using-git-worktrees` · `finishing-a-development-branch` · `requesting-code-review` · `ui-ux-pro-max`(디자인 자료집 — 결과는 UI_GUIDE·TASTE 에 맞춰 고름) · `caveman`·`ultracave`·`megacave`·`caveman-help`(짧은 말투로 토큰 절약) |
 
 ### 훅 (항상 켜져 있음)
 | 때 | 하는 일 |

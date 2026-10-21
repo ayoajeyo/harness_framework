@@ -1,8 +1,15 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, modifying behavior, or planning anything new, in software or out of it (a talk, a business, a renovation)."
-disable-model-invocation: true
+description: "큰 기능일 때만 자동으로 쓴다 — 새 화면·새 메뉴, 새 데이터 필드·저장 형식 변경, 새 외부 서비스(결제·로그인·서버 함수), 여러 파일에 걸친 새 기능을 만들기 전에 원하는 것을 질문으로 분명히 하고 설계를 승인받는다. 작은 수정·버그 수정·문구·CSS·설정, 표시점 인식 분석문 처리, 이미 계획서가 승인된 작업에는 쓰지 않는다. 사용자가 /brainstorming 으로 부르면 크기와 상관없이 쓴다."
 ---
+
+<!-- AYOAJEYO 하네스 연결 (원본: obra/superpowers brainstorming, MIT) — 자동 사용 범위·저장 위치·다음 단계를 하네스에 맞춤 -->
+## 하네스에서 쓸 때 (아래 원문보다 먼저 따른다)
+- **언제 자동으로**: 위 설명의 '큰 기능'일 때만. 애매하면 쓰지 않고 `/feature` 로 진행한다. 시작할 때 "큰 기능이라 먼저 몇 가지 여쭤볼게요" 한 줄로 알린다. 사용자가 "그냥 진행" 이라고 하면 바로 멈추고 `/feature` 로 간다.
+- **질문**: 한국어, 한 번에 최대 3개, 전문용어는 괄호로 풀이. 고를 수 있는 답이면 선택지로.
+- **설계 문서 위치**: `docs/superpowers/specs/…` 가 아니라 `docs/PLANS/YYYY-MM-DD-{제목}.md` (`plan-gate` 계획서 양식). 새 데이터 필드는 `docs/DATA.md`, 구조 결정은 `docs/ADR.md` 에 먼저 적는다.
+- **승인 뒤 다음 단계**: `writing-plans` 를 부르지 않는다. 승인된 계획서로 `/feature` 흐름(테스트 먼저 → 구현 → 검토 → 문서)을 이어 간다.
+- **토큰 절약**: 화면 미리보기 서버(visual companion)는 사용자가 원할 때만 제안한다. builder check 서브에이전트는 계획서를 쓰는 큰 작업에서만, 한 번.
 
 # Brainstorming
 
@@ -189,8 +196,9 @@ and the gate goes with it. A spike they said yes to may be built; it
 stays labeled throwaway, and keeping what it produced is a new request
 that comes back through this gate.
 
-After a project's document is approved, the next step is the plan. For
-software, invoke superpowers:writing-plans and no other skill.
+After a project's document is approved, the next step is the plan. In this
+harness: continue with the approved docs/PLANS document through the /feature flow
+(see '하네스에서 쓸 때' above) — do not invoke writing-plans.
 </HARD-GATE>
 
 ## Red Flags

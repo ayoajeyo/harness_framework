@@ -52,7 +52,7 @@
 - 외부 라이브러리·서비스(예: 엑셀·차트·자세 인식·Supabase·결제)의 사용법이 필요하면 기억에 의존하지 말고 Context7(최신 공식 문서 찾아 주는 도구)로 확인한 뒤 코드를 쓴다. 버전은 이 앱이 실제로 쓰는 버전 기준. Context7 이 연결돼 있지 않으면 공식 문서를 찾아 확인하고, 확인 못 한 부분은 "확인 필요" 로 알린다.
 - 버튼 → 저장 → 파일처럼 흐름이 있는 기능은 끝내기 전에 `browser-check`(가짜 자료 시나리오)로 실제 브라우저에서 확인한다. 이미 쓰는 앱의 저장 형식을 바꿀 때는 `data-migration` 규칙을 따른다.
 - 설계는 `architect`, 테스트는 `tester`, 원인 분석은 `debugger`, 검토는 `reviewer`, 개인정보는 `privacy-guard`, 화면 규칙 점검은 `ui-checker`, 화면 개선안은 `ui-designer`, 문서 동기화는 `docs-keeper` 에이전트. 접근성 점검은 `a11y-checker`, 폰 속도 점검은 `speed-checker`, 서버(Supabase) 보안 점검은 `supabase-checker` — 셋 다 사용자가 부를 때만.
-- 외부 스킬(Superpowers·Caveman): 디버깅(`systematic-debugging`)·TDD(`test-driven-development`)·완료 전 확인(`verification-before-completion`)·리뷰 받기(`receiving-code-review`)·병렬 작업(`dispatching-parallel-agents`)·스킬 작성(`writing-skills`) 6개는 상황이 맞으면 자동으로 쓴다. 브레인스토밍·계획·실행·worktree·브랜치 마무리·리뷰 요청은 `/brainstorming` 처럼 사용자가 부를 때만 — 평소 흐름은 `/feature`·`/fix`·`/ship` 이 우선. Caveman(짧은 말투)도 `/caveman` 으로 부를 때만.
+- 외부 스킬(Superpowers·Caveman): 디버깅(`systematic-debugging`)·TDD(`test-driven-development`)·완료 전 확인(`verification-before-completion`)·리뷰 받기(`receiving-code-review`)·병렬 작업(`dispatching-parallel-agents`)·스킬 작성(`writing-skills`) 6개는 상황이 맞으면 자동으로 쓴다. 브레인스토밍(`brainstorming`)은 **큰 기능**(새 화면·새 데이터 필드·새 외부 서비스·여러 파일에 걸친 새 기능)일 때만 자동 — 결과는 `docs/PLANS/` 계획서, 승인 뒤 `/feature` 로 이어 감. 계획·실행·worktree·브랜치 마무리·리뷰 요청은 `/writing-plans` 처럼 사용자가 부를 때만 — 평소 흐름은 `/feature`·`/fix`·`/ship` 이 우선. Caveman(짧은 말투)도 `/caveman` 으로 부를 때만.
 - 화면 시안이 여러 가지로 가능하면 `/design` 으로 2~3개를 만들어 사용자가 고르게 한다.
 - 버전은 네 곳(APP_VERSION · manifest · sw.js CACHE_VERSION · CHANGELOG)을 `/ship` 이 함께 올린다.
 

@@ -36,7 +36,7 @@ SOFTWARE.
 ```
 
 ## obra/superpowers — MIT License (© 2025 Jesse Vincent)
-https://github.com/obra/superpowers 의 스킬 13개를 넣었다. 시작 훅(SessionStart)·`using-superpowers`·`diagnosing-superpowers` 는 모든 대화에서 스킬을 강제해 `/feature`·`/fix`·`/ship` 하네스와 부딪혀 **뺐다**. 하네스와 겹치는 brainstorming·writing-plans·executing-plans·subagent-driven-development·using-git-worktrees·finishing-a-development-branch·requesting-code-review 는 `disable-model-invocation: true`(사용자가 부를 때만).
+https://github.com/obra/superpowers 의 스킬 13개를 넣었다. 시작 훅(SessionStart)·`using-superpowers`·`diagnosing-superpowers` 는 모든 대화에서 스킬을 강제해 `/feature`·`/fix`·`/ship` 하네스와 부딪혀 **뺐다**. `brainstorming` 은 큰 기능일 때만 자동으로 쓰게 설명·저장 위치(`docs/PLANS/`)·다음 단계(`/feature`)를 하네스에 맞춰 고쳤다. 하네스와 겹치는 writing-plans·executing-plans·subagent-driven-development·using-git-worktrees·finishing-a-development-branch·requesting-code-review 는 `disable-model-invocation: true`(사용자가 부를 때만).
 
 | 이 저장소 파일 | 원본 |
 |---|---|
