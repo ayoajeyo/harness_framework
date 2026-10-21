@@ -169,6 +169,8 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `browser-check` | 기능이 실제 브라우저에서 끝까지 되는지 시나리오 한 장으로 확인 (`scripts/browser_check.py`) |
 | `data-migration` | 저장 형식을 바꿀 때 기존 회원 자료를 지키는 규칙 — 바꾸면 안 되는 이름·예전 자료 '모름' 처리·빈 값·예전 자료로 시험 |
 
+**외부 문서 도구**: Context7 — 외부 라이브러리·서비스의 최신 사용법을 찾아 준다. 저장소에 설치하는 것이 아니라 claude.ai 계정의 커넥터(연결 도구)로 쓴다. 연결이 안 돼 있으면 claude.ai → 설정 → 커넥터에서 Context7 을 켠다. CLAUDE.md 개발 프로세스에 '사용법은 Context7 로 확인' 규칙이 있다.
+
 **외부 스킬** (출처 `THIRD_PARTY_NOTICES.md`)
 | 언제 | 스킬 |
 |------|------|
