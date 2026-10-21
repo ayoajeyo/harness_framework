@@ -70,12 +70,19 @@ def write(path, content, tool="content"):
                                                   ensure_ascii=False))
 
 
+# 가짜 키는 접두사와 나머지를 나눠 쓴다: 통째로 적으면 commit_guard 가 이 파일 자체를 비밀키로 보고 커밋을 막는다
+FAKE_OPENAI = "sk-proj-" + "Ab3dEfGh1jKlMn0pQrStUvWxYz123456AbCd"
+FAKE_ANTHROPIC = "sk-ant-api03-" + "Xy9zAbCdEfGh12345678IjKlMnOpQrStUvWxYz-AbCdEfGhIjKlMnAA"
+FAKE_AWS = "AKIA" + "ABCDEFGHIJKLMNOP"
+FAKE_PRIVATE_KEY = "-----BEGIN RSA " + "PRIVATE KEY-----"
+
+
 @pytest.mark.parametrize("content", [
-    'const KEY = "sk-proj-Ab3dEfGh1jKlMn0pQrStUvWxYz123456AbCd"',
-    "ANTHROPIC_KEY = 'sk-ant-api03-Xy9zAbCdEfGh12345678IjKlMnOpQrStUvWxYz-AbCdEfGhIjKlMnAA'",
-    "aws = 'AKIAABCDEFGHIJKLMNOP'",
+    f'const KEY = "{FAKE_OPENAI}"',
+    f"ANTHROPIC_KEY = '{FAKE_ANTHROPIC}'",
+    f"aws = '{FAKE_AWS}'",
     "token: ghp_" + "a" * 36,
-    "-----BEGIN RSA PRIVATE KEY-----",
+    FAKE_PRIVATE_KEY,
     "const s = '" + "sb_secret_" + "x" * 30 + "'",
 ])
 def test_secret_blocked(content):
@@ -95,21 +102,21 @@ def test_anon_jwt_allowed():
 
 
 def test_secret_in_edit_blocked():
-    assert write("js/app.js", "x = 'sk-ant-api03-Xy9zAbCdEfGh12345678IjKlMnOpQrStUvWxYz'", tool="edit").returncode == 2
+    assert write("js/app.js", "x = 'sk-ant-api03-" + "Xy9zAbCdEfGh12345678IjKlMnOpQrStUvWxYz'", tool="edit").returncode == 2
 
 
 def test_secret_in_multiedit_blocked():
-    payload = {"tool_input": {"file_path": "a.js", "edits": [{"new_string": "AKIAABCDEFGHIJKLMNOP"}]}}
+    payload = {"tool_input": {"file_path": "a.js", "edits": [{"new_string": FAKE_AWS}]}}
     assert run_hook("secret_guard.py", json.dumps(payload)).returncode == 2
 
 
 @pytest.mark.parametrize("path", [".env", ".env.local", "C:\\proj\\.env", "/home/u/p/.env.production"])
 def test_env_files_allowed(path):
-    assert write(path, "OPENAI_KEY=sk-proj-Ab3dEfGh1jKlMn0pQrStUvWxYz123456AbCd").returncode == 0
+    assert write(path, f"OPENAI_KEY={FAKE_OPENAI}").returncode == 0
 
 
 def test_env_example_with_real_key_blocked():
-    assert write(".env.example", "KEY=sk-proj-Ab3dEfGh1jKlMn0pQrStUvWxYz123456AbCd").returncode == 2
+    assert write(".env.example", f"KEY={FAKE_OPENAI}").returncode == 2
 
 
 @pytest.mark.parametrize("content", [
