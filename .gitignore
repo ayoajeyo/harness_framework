@@ -34,3 +34,6 @@ __pycache__/
 
 # Graphify 코드 지도 (기기마다 다시 만든다)
 graphify-out/
+
+# 이 PC 전용 권한 설정 (새 앱으로 퍼지지 않게)
+.claude/settings.local.json
