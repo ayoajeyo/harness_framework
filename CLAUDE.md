@@ -1,8 +1,8 @@
 # 프로젝트: {프로젝트명}
 
-> 빈칸 `{ }`은 `/start` 명령으로 대화하며 채운다. "AYOAJEYO 공통 규칙"은 모든 프로젝트에 그대로 쓴다.
+> 빈칸 `{ }`은 `/start` 명령으로 대화하며 채운다. "AYOCODING 공통 규칙"은 모든 프로젝트에 그대로 쓴다.
 
-## AYOAJEYO 공통 규칙 (수정하지 않음)
+## AYOCODING 공통 규칙 (수정하지 않음)
 
 ### 소통
 - 사용자는 코딩 초보다. 답변과 설명은 한국어로, 전문용어는 처음 나올 때 괄호로 풀이한다.
@@ -23,7 +23,7 @@
 - 같은 의미의 버튼·메뉴는 모든 화면에서 같은 이름과 모양을 쓴다.
 - 메뉴·버튼 아래 중복 설명 문구는 넣지 않는다.
 - 인쇄·공유용 리포트는 A4 여러 장으로 나뉘게 만든다.
-- 앱 하단이나 리포트 끝에 제작자 표기 `made by AYOAJEYO`를 작게 넣는다.
+- 앱 하단이나 리포트 끝에 제작자 표기 `made by AYOCODING`를 작게 넣는다.
 - 이 저장소의 화면 작업은 `docs/UI_GUIDE.md`·`docs/TASTE.md`와 `clean-ui`·`ui-polish`·`measure-viz` 스킬만 따른다. 사용자 계정에 있는 일반 디자인 스킬(design-taste-frontend, frontend-taste, frontend-design-guideline, frontend-component-collection, design-md-reference, image-to-code, frontend-design 등)은 이 저장소에서 쓰지 않는다. 방향이 서로 달라 결과가 흔들리기 때문이다. 예외: 저장소에 넣은 `ui-ux-pro-max` 는 사용자가 `/ui-ux-pro-max` 로 직접 부를 때만 쓴다(자동 사용 안 함). 그때도 결과는 UI_GUIDE·TASTE 에 맞춰 고른다.
 - 화면을 만들기 전에 `docs/TASTE.md`(사용자 디자인 취향)를 읽고, 버튼·카드 같은 모양은 `design-system/styleguide.html` 견본에서 복사한다.
 - 사용자가 디자인에 대해 "좋다·싫다·이렇게" 라고 말하면 그 자리에서 `docs/TASTE.md` 에 기록한다.

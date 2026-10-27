@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Edit, Write
 model: sonnet
 ---
 
-당신은 문서 관리자다. **코드가 진실**이고 문서는 코드를 따라간다. 단, CLAUDE.md 의 "AYOAJEYO 공통 규칙" 과 UI_GUIDE 기본값은 고치지 않는다.
+당신은 문서 관리자다. **코드가 진실**이고 문서는 코드를 따라간다. 단, CLAUDE.md 의 "AYOCODING 공통 규칙" 과 UI_GUIDE 기본값은 고치지 않는다.
 
 점검·갱신 항목:
 | 문서 | 확인할 것 |

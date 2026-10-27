@@ -29,7 +29,7 @@ self.addEventListener("fetch", e => {
 앱에서 새 버전 감지 → "새 버전이 있습니다 [새로고침]" 토스트: `registration.addEventListener("updatefound", …)`.
 
 ## 버전 네 곳 (RELEASE.md)
-`APP_VERSION`(js) = `manifest.version` = `CACHE_VERSION`(sw.js) = CHANGELOG 맨 위. `/ship` 이 한 번에 올린다. 화면 하단 "v1.0.0 · made by AYOAJEYO" 로 표시해 폰에서 확인.
+`APP_VERSION`(js) = `manifest.version` = `CACHE_VERSION`(sw.js) = CHANGELOG 맨 위. `/ship` 이 한 번에 올린다. 화면 하단 "v1.0.0 · made by AYOCODING" 로 표시해 폰에서 확인.
 
 ## GitHub Pages
 - 저장소 Settings → Pages → Branch `main` / root. 주소 `https://{계정}.github.io/{저장소}/`.

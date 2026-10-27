@@ -1,4 +1,4 @@
-# START HERE — 아요바디요 하네스 사용 설명서
+# START HERE — 아요코딩 하네스 사용 설명서
 
 이 저장소는 **앱을 기획 → 제작 → 출시 → 운영 → 개선**하는 전 과정을 Claude Code 위에서 돌리기 위한 작업 틀(하네스)입니다.
 코딩을 몰라도 순서대로 따라 하면 됩니다. 용어가 낯설면 `docs/GLOSSARY.md`.
@@ -276,7 +276,7 @@ AI 는 대화가 길수록 앞 내용을 매번 다시 읽어서 같은 질문�
 cd $HOME\Documents\harness_framework
 powershell -ExecutionPolicy Bypass -File scripts\adopt.ps1 $HOME\Documents\posture-check
 ```
-스크립트가 알려 주는 `cd` 와 `claude` 를 입력한 뒤 `/adopt 아요바디요 체형 측정 앱`.
+스크립트가 알려 주는 `cd` 와 `claude` 를 입력한 뒤 `/adopt 바디샷 체형 측정 앱`.
 `/adopt` 가 코드를 읽어 문서를 채우고, 표준과 다른 점(🔴 비밀키·버전 불일치 등)을 BACKLOG 에 넣는다. 그다음부터 `/feature` `/fix` `/ship` 을 그대로 쓴다.
 
 ## 7. 큰 작업 실행기 (`/harness` + execute.py)

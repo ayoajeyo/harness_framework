@@ -10,7 +10,7 @@ description: A4 여러 장으로 인쇄·PDF 저장되는 리포트를 HTML+CSS 
 <section class="page">   <!-- 페이지 1 -->
   <header class="page-head">앱 이름 · 회원 · 2026.10.14 · No.2471</header>
   <main>…</main>
-  <footer class="page-foot">made by AYOAJEYO · 1 / 3</footer>
+  <footer class="page-foot">made by AYOCODING · 1 / 3</footer>
 </section>
 <section class="page">…</section>
 ```

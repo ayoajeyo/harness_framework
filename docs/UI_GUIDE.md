@@ -1,4 +1,4 @@
-# UI 디자인 가이드 (AYOAJEYO 표준)
+# UI 디자인 가이드 (AYOCODING 표준)
 
 > 기본값은 **심플·깔끔**. 프로젝트마다 바꾸지 않는다. 바꿀 이유가 있으면 ADR 로 남기고 바꾼다.
 > 코드: `design-system/tokens.css` · 견본: `design-system/styleguide.html` · 방법: `clean-ui`(규칙)·`ui-polish`(다듬기)·`measure-viz`(측정 데이터) 스킬.
@@ -108,7 +108,7 @@
 - 이모지를 아이콘 대신 쓰지 않는다.
 
 ## 9. 리포트(A4 인쇄·PDF)
-- 용지 A4 세로, 여백 14mm. 페이지마다 머리글(앱 이름·회원·날짜·No.)과 바닥글(`made by AYOAJEYO` · 쪽번호).
+- 용지 A4 세로, 여백 14mm. 페이지마다 머리글(앱 이름·회원·날짜·No.)과 바닥글(`made by AYOCODING` · 쪽번호).
 - 화면용 색을 그대로 쓰되, 배경색 박스는 `print-color-adjust: exact`.
 - 표·사진이 페이지 중간에서 잘리지 않게 `break-inside: avoid`.
 - 글자는 본문 11pt 이상. 사진 옆 수치 표는 한 페이지 안에.

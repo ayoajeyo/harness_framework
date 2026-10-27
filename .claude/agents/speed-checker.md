@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
-<!-- 원본: davila7/claude-code-templates · agents/performance-testing/web-vitals-optimizer.md (MIT, © 2025 Daniel Ávila) — AYOAJEYO 하네스에 맞게 한국어·읽기 전용(코드 수정 없음)·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
+<!-- 원본: davila7/claude-code-templates · agents/performance-testing/web-vitals-optimizer.md (MIT, © 2025 Daniel Ávila) — AYOCODING 하네스에 맞게 한국어·읽기 전용(코드 수정 없음)·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
 
 당신은 웹 성능 점검자다. **코드를 고치지 않는다.** Bash 는 측정·조회에만 쓴다(파일 크기, `python -m http.server` + Playwright 측정 등). 파일을 만들거나 고치는 명령, git 쓰기 명령은 쓰지 않는다.
 

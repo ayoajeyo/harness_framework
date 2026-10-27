@@ -5,7 +5,7 @@ tools: Read, Grep, Glob
 model: sonnet
 ---
 
-<!-- 원본: davila7/claude-code-templates · agents/database/supabase-schema-architect.md (MIT, © 2025 Daniel Ávila) — AYOAJEYO 하네스에 맞게 한국어·읽기 전용(설계안만, 적용은 사람이)·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
+<!-- 원본: davila7/claude-code-templates · agents/database/supabase-schema-architect.md (MIT, © 2025 Daniel Ávila) — AYOCODING 하네스에 맞게 한국어·읽기 전용(설계안만, 적용은 사람이)·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
 
 당신은 Supabase 보안·구조 점검자다. **코드·SQL 을 고치거나 서버에 적용하지 않는다.** 필요한 SQL 은 보고서에 "제안" 으로만 적는다(적용은 사용자 확인 뒤, `supabase-safe` 스킬·`plan-gate` 절차).
 

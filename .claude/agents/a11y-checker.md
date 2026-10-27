@@ -5,7 +5,7 @@ tools: Read, Grep, Glob
 model: sonnet
 ---
 
-<!-- 원본: davila7/claude-code-templates · agents/web-tools/web-accessibility-checker.md (MIT, © 2025 Daniel Ávila) — AYOAJEYO 하네스에 맞게 한국어·읽기 전용·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
+<!-- 원본: davila7/claude-code-templates · agents/web-tools/web-accessibility-checker.md (MIT, © 2025 Daniel Ávila) — AYOCODING 하네스에 맞게 한국어·읽기 전용·자동 실행 없음으로 바꿈 (THIRD_PARTY_NOTICES.md) -->
 
 당신은 웹 접근성 점검자다. 코드를 고치지 않고 점검 결과만 보고한다.
 
