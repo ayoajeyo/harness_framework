@@ -55,6 +55,11 @@
 **이유**: 스킬만으로는 돌지 않고 PC 마다 Python 프로그램이 있어야 한다. `graphify install` 이 최신 스킬을 깔아 주므로, 복사본을 두면 낡은 채 남는다. 설치된 스킬 설명이 "코드 질문이면 먼저 쓰라" 여서 그대로 두면 토큰을 많이 쓴다.
 **트레이드오프**: 클라우드 작업 공간에서는 매번 설치해야 한다(Archify 와 같음). 한 파일짜리 작은 앱에서는 얻는 게 적다.
 
+### ADR-000-10: gitingest 만 로컬 명령으로 안내하고, 같이 검토한 4개는 넣지 않는다
+**결정**: gitingest 는 START_HERE.md 에 `pip install gitingest` → `gitingest .` 안내와 `.gitignore` 의 `digest.txt` 만 둔다. 웹 방식(gitingest.com)은 쓰지 않는다. Fabric·MoneyPrinterV2·Agent-S·google-maps-scraper 는 넣지 않는다.
+**이유**: gitingest 는 Claude Code 밖 AI 에 코드를 보여 줄 때만 쓸모 있고, 웹 방식은 코드를 외부 서버로 보낸다. Fabric 은 Go 프로그램+API 키가 필요하고 하네스 스킬·명령과 역할이 겹친다. MoneyPrinterV2(자동 게시·대량 메일)와 google-maps-scraper(업체 연락처 수집)는 플랫폼 약관·스팸·개인정보 법 위험이 크고 앱 만들기와 무관하다. Agent-S 는 PC 전체를 AI 가 조작하는데, 화면 확인은 이미 browser-check·Chrome 도구로 한다.
+**트레이드오프**: gitingest 로컬 명령의 사용 통계 전송 여부는 확인하지 못했다(확인 필요). 묶음 파일에 `.gitignore` 밖의 민감 자료가 섞일 수 있어 붙여 넣기 전 눈으로 확인해야 한다.
+
 ---
 
 ## 이 프로젝트의 ADR
