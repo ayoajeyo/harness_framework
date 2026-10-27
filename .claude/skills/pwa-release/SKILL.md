@@ -37,6 +37,16 @@ self.addEventListener("fetch", e => {
 - 반영까지 1~2분. 확인: 시크릿 창에서 열어 버전 번호.
 - 커스텀 도메인은 `CNAME` 파일 + DNS. HTTPS 자동.
 
+## 배포 장소 고르기 (GitHub Pages ↔ Vercel)
+기본은 GitHub Pages. 아래 중 하나가 필요해지면 Vercel 로 옮기고 앱 `docs/ADR.md` 에 적는다 (MEDICALLINK ADR-024, 2026-10 기준 — 요금제는 바뀔 수 있으니 확인).
+| 필요한 것 | GitHub Pages (무료) | Vercel |
+|---|---|---|
+| 저장소 **비공개** | 무료 플랜은 공개 저장소만 — 비공개로 바꾸는 순간 사이트가 멈춘다 | 됨 |
+| 기관별 주소(`기관.도메인`) | 안 됨 | 와일드카드 도메인(판매용이면 Pro 요금제일 가능성) |
+| 캐시 제어 | `max-age=600` 고정 → 배포 직후 10분은 폰이 예전 파일을 씀 | `vercel.json` 으로 `sw.js`·manifest `no-store`, 나머지 `max-age=0, must-revalidate` |
+- 옮기기 쉬우려면 처음부터 **모든 경로를 상대 경로**(`./index.html`)로, 앱 주소를 코드에 박지 않는다. 데이터·로그인·알림은 Supabase 그대로.
+- 주소가 바뀌면 브라우저 저장소·알림 구독·손님 열쇠가 주소마다 따로라 **옛 주소를 바로 끄지 않는다.** 로그인 Redirect URL·CORS 허용 주소·OAuth 설정도 새 주소로 추가.
+
 ## Google Play 에 올리기 (TWA)
 1. PWABuilder(pwabuilder.com) 에 주소 입력 → Android 패키지 생성. **패키지 이름은 처음 정한 것 고정**(바꾸면 다른 앱으로 취급).
 2. 다운로드한 zip 의 `assetlinks.json` 을 **도메인 맨 위** `.well-known/assetlinks.json` 에 올린다 → 주소창 없이 열림. 앱 주소가 `아이디.github.io/앱이름/` 이면 앱 저장소가 아니라 **`아이디.github.io` 저장소**에 넣고, 그 저장소 `_config.yml` 에 `include: [".well-known"]`(점 폴더는 GitHub Pages 가 숨김).

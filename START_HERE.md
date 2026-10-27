@@ -92,7 +92,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `docs/PLANS/` | 승인받은 계획서 보관함 (`/plan`, 위험한 `/feature`·`/fix` 가 만듦) | 승인할 때 |
 | `.claude/commands/` | 슬래시 명령 21개 | 그대로 |
 | `.claude/agents/` | 전문 담당 11명 (8명 + 부를 때만 3명) | 그대로 |
-| `.claude/skills/` | 노하우 38개 (기본 20 + 외부 18: Superpowers·UI UX Pro Max·Caveman) | 디자인 기본값 바꿀 때만 |
+| `.claude/skills/` | 노하우 41개 (기본 23 + 외부 18: Superpowers·UI UX Pro Max·Caveman) | 디자인 기본값 바꿀 때만 |
 | `.claude/hooks/` + `settings.json` | 자동 안전장치 | 그대로 |
 | `THIRD_PARTY_NOTICES.md` | 가져온 외부 스킬의 출처·라이선스(MIT) | 그대로 |
 | `scripts/new-project.ps1` | 새 프로젝트 폴더 만들기 | 그대로 |
