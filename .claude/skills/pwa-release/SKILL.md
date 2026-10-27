@@ -8,12 +8,12 @@ description: PWA 설치(manifest·서비스워커·캐시 버전), GitHub Pages 
 ## manifest.json 최소
 ```json
 { "name": "{앱 이름}", "short_name": "{짧은 이름}", "start_url": "./?source=pwa", "scope": "./",
-  "display": "standalone", "background_color": "#F7F7F5", "theme_color": "#1E2A4A", "lang": "ko",
+  "display": "standalone", "background_color": "#FFFFFF", "theme_color": "#FFFFFF", "lang": "ko",
   "version": "1.0.0",
   "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
             { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }] }
 ```
-`<link rel="manifest" href="manifest.json">`, `<meta name="theme-color" content="#1E2A4A">`, iOS 용 `<link rel="apple-touch-icon" href="icons/icon-192.png">`.
+`<link rel="manifest" href="manifest.json">`, `<meta name="theme-color" content="#FFFFFF">`, iOS 용 `<link rel="apple-touch-icon" href="icons/icon-192.png">`.
 
 ## 서비스워커 (버전이 핵심)
 ```js

@@ -22,7 +22,7 @@ argument-hint: [선택: 살펴볼 곳 — 예: 회차 계산, 회원 삭제, ind
 
 ## 2. 그림 보고서 (HTML)
 - 저장소 **밖** 임시 폴더에 한 파일로 만든다: Windows 는 `%TEMP%\architecture-review-YYYYMMDD-HHMM.html`, 그 밖은 `$TMPDIR` 또는 `/tmp`. 연다: Windows `start "" "경로"`, macOS `open`, Linux `xdg-open`. 전체 경로를 알려 준다.
-- 혼자 열리는 HTML. 스타일은 `<style>` 로 직접(네이비 `#1E2A4A` 하나 + 빨강 새는 곳 + 주황 주의). 관계도는 Mermaid: `<script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs"; mermaid.initialize({startOnLoad:true, theme:"neutral"});</script>` 와 `<pre class="mermaid">…</pre>`.
+- 혼자 열리는 HTML. 스타일은 `<style>` 로 직접(무채색 검정 `#1D1D1F` + 빨강 새는 곳 + 주황 주의). 관계도는 Mermaid: `<script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs"; mermaid.initialize({startOnLoad:true, theme:"neutral"});</script>` 와 `<pre class="mermaid">…</pre>`.
 - 맨 위: 저장소 이름·날짜·범례(네모 = 모듈, 점선 = 이음매, 빨간 화살표 = 새는 곳, 굵은 네모 = 깊은 모듈). 소개 문단 없이 바로 후보.
 - 후보마다 카드 하나:
   - **제목** (무엇을 깊게 하나, 예: "회차 계산을 한 모듈로")

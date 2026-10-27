@@ -73,7 +73,7 @@ GitHub 에 처음 push 할 때 브라우저 로그인 창이 뜨면 **Sign in wi
 | `docs/ARCHITECTURE.md` | 어떻게 짜여 있나(폴더·데이터 흐름·보안) | `/start`, 바뀌면 `docs-keeper` |
 | `docs/ADR.md` | 왜 그렇게 정했나 (공통 ADR-000 시리즈는 기본값) | 결정이 바뀔 때 |
 | `docs/DATA.md` | 다루는 모든 데이터와 민감도·보관·삭제 | 새 필드 전에 |
-| `docs/UI_GUIDE.md` | 디자인 표준(네이비 단일 포인트·버튼 단어 표준) | 거의 안 고침 |
+| `docs/UI_GUIDE.md` | 디자인 표준(무채색·버튼 단어 표준) | 거의 안 고침 |
 | `docs/TESTING.md` | 자동 테스트 규칙 + 폰 수동 점검표 | 점검 항목 추가 |
 | `docs/RELEASE.md` | 버전 규칙, 배포 절차, 스토어 정보 보관함 | 스토어 정보 |
 | `docs/PRIVACY.md` | 동의 문구, 개인정보처리방침 재료 | 책임자·이메일 |

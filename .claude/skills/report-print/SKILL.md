@@ -28,8 +28,8 @@ description: A4 여러 장으로 인쇄·PDF 저장되는 리포트를 HTML+CSS 
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
 .card, table, figure { break-inside: avoid; }
-.page-head { display: flex; justify-content: space-between; font-size: 11pt; color: #6B7280; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px; }
-.page-foot { margin-top: auto; font-size: 9pt; color: #6B7280; text-align: right; }
+.page-head { display: flex; justify-content: space-between; font-size: 11pt; color: #6E6E73; border-bottom: 1px solid #E5E5EA; padding-bottom: 6px; }
+.page-foot { margin-top: auto; font-size: 9pt; color: #6E6E73; text-align: right; }
 ```
 - 본문 11pt, 표 10pt, 수치 강조 18pt. 화면 글꼴과 같은 Pretendard.
 - 상태색: 정상 `#15803D`/`#ECFDF3`, 주의 `#B45309`/`#FFF7E6`, 개선 필요 `#B91C1C`/`#FEF2F2`. 색만으로 구분하지 말고 글자도 함께("주의").

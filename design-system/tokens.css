@@ -10,20 +10,20 @@
 :root {
   color-scheme: light;
 
-  /* 색 — 포인트는 네이비 하나 */
-  --ink: #1E2A4A;          /* 주 버튼, 선택 상태, 제목, 링크 */
-  --ink-soft: #EEF1F7;     /* 선택된 항목 배경, 정보 박스 */
-  --text: #1F2328;         /* 본문 */
-  --muted: #6B7280;        /* 날짜, 단위, 설명 */
-  --line: #E5E7EB;         /* 테두리, 구분선 */
-  --line-strong: #D1D5DB;  /* 입력칸·보조 버튼 테두리 */
+  /* 색 — 무채색(흰색·검정·회색). 애플·노션 기준. 색은 상태 표시에만 */
+  --ink: #1D1D1F;          /* 주 버튼(검정), 선택 상태, 제목, 링크 */
+  --ink-soft: #F5F5F7;     /* 선택된 항목 배경, 정보 박스 */
+  --text: #1D1D1F;         /* 본문 */
+  --muted: #6E6E73;        /* 날짜, 단위, 설명 */
+  --line: #E5E5EA;         /* 테두리, 구분선 */
+  --line-strong: #D2D2D7;  /* 입력칸·보조 버튼 테두리 */
   --bg: #FFFFFF;           /* 카드, 입력칸 */
-  --page: #F7F7F5;         /* 페이지 배경 */
-  --fill: #EEF0F2;         /* 뼈대(로딩), 막대 그래프 바탕 */
-  --ink-faint: #A3ABBA;    /* 좌우 비교에서 작은 쪽 막대 */
+  --page: #FFFFFF;         /* 페이지 배경 (흰색) */
+  --fill: #EDEDEF;         /* 뼈대(로딩), 막대 그래프 바탕 */
+  --ink-faint: #AEAEB2;    /* 좌우 비교에서 작은 쪽 막대 */
   --ok-band: #BFE5CC;      /* 정상 범위 띠 */
   --bad-line: #F5C2C2;     /* 오류 상자 테두리 */
-  --toast: rgba(31, 35, 40, .92);
+  --toast: rgba(29, 29, 31, .92);
   --ok: #15803D;   --ok-bg: #ECFDF3;    /* 상태 표시 전용 */
   --warn: #B45309; --warn-bg: #FFF7E6;
   --bad: #B91C1C;  --bad-bg: #FEF2F2;
@@ -165,7 +165,7 @@ button, input, select, textarea { font: inherit; color: inherit; letter-spacing:
 .range-scale > span:first-child { transform: none; }
 .range-scale > span:last-child  { left: auto; right: 0; transform: none; }
 .range-scale > .ok { color: var(--ok); font-weight: 600; }
-/* 좌우 비교: 줄마다 [왼쪽|막대|값]. 큰 쪽은 네이비, 작은 쪽은 연하게 */
+/* 좌우 비교: 줄마다 [왼쪽|막대|값]. 큰 쪽은 검정, 작은 쪽은 연하게 */
 .pair { display: grid; gap: 10px; }
 .pair-row { display: grid; grid-template-columns: 44px 1fr 56px; align-items: center; gap: var(--s1); font-size: var(--fs-cap); }
 .pair-row > b { font-weight: 600; color: var(--text); }

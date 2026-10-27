@@ -19,7 +19,7 @@
 ## 2. 디렉토리 구조
 ```
 index.html            # 첫 화면. 다른 화면은 섹션 전환 또는 pages/*.html
-manifest.json         # 앱 이름·아이콘·테마색 (#1E2A4A)
+manifest.json         # 앱 이름·아이콘·테마색 (#FFFFFF)
 sw.js                 # 오프라인 캐시. CACHE_VERSION 을 배포마다 올린다
 css/style.css         # clean-ui 변수로 시작
 js/app.js             # 화면 동작(이벤트·렌더링)만. 계산은 넣지 않는다

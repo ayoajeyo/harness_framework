@@ -18,7 +18,7 @@
 | 훅(hook) | 특정 순간(파일 저장 전 등)에 자동 실행되는 검사 | `.claude/hooks/` |
 | 에이전트 | 특정 역할(검토·테스트)만 맡는 보조 AI | `.claude/agents/` |
 | 스킬 | AI 가 필요할 때 꺼내 보는 노하우 문서 | `.claude/skills/` |
-| 디자인 토큰 | 색·글자 크기·여백 같은 디자인 값을 이름 붙여 한 곳에 모은 것 (`--ink` = 네이비) | `design-system/tokens.css` |
+| 디자인 토큰 | 색·글자 크기·여백 같은 디자인 값을 이름 붙여 한 곳에 모은 것 (`--ink` = 포인트 검정) | `design-system/tokens.css` |
 | 견본(스타일가이드) | 버튼·카드·입력칸 같은 모양을 한 페이지에 모아 둔 표본. 새 화면은 여기서 복사 | `design-system/styleguide.html` |
 | 시안 | 실제로 만들기 전에 보여 주는 화면 후보. 2~3개를 비교해 고른다 | `/design`, `design/` 폴더 |
 | 화면 캡처 | 브라우저로 폰 크기 화면을 사진으로 찍는 것. AI 가 사진을 보고 판단 | `scripts/screenshot.py`, `.shots/` |
