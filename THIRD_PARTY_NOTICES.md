@@ -61,6 +61,3 @@ https://github.com/obra/superpowers 의 스킬 13개를 넣었다. 시작 훅(Se
 
 ## Graphify-Labs/graphify — Apache License 2.0
 선택 도구. **하네스 안에 파일을 넣지 않는다** — 사용자가 PC 에 `pip install graphifyy` → `graphify install` 로 직접 설치(START_HERE.md "코드 지도"). 하네스는 설치 안내·`.gitignore`·"부를 때만" 규칙만 둔다. https://github.com/Graphify-Labs/graphify
-
-## coderamp-labs/gitingest — MIT License
-선택 도구. **하네스 안에 파일을 넣지 않는다** — 사용자가 PC 에 `pip install gitingest` 로 직접 설치(START_HERE.md "코드 한 파일로 묶기"). 하네스는 설치 안내·`.gitignore`(`digest.txt`)만 둔다. https://github.com/coderamp-labs/gitingest

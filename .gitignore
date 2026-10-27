@@ -34,6 +34,3 @@ __pycache__/
 
 # Graphify 코드 지도 (기기마다 다시 만든다)
 graphify-out/
-
-# gitingest 코드 묶음 (앱 코드 전체가 들어 있음)
-digest.txt

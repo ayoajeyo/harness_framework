@@ -254,15 +254,6 @@ python -m graphify install
 ```
 패키지 이름은 `graphifyy`(y 두 개)가 맞습니다. 쓰기: Claude Code 에서 `/graphify .`(처음 한 번 지도 만들기) → `/graphify query "알림은 어디서 보내?"`. 결과는 `graphify-out/` 에 저장되고 GitHub 에는 올라가지 않습니다(.gitignore). 처음 만들 때 토큰이 많이 들어, **부를 때만** 씁니다.
 
-### 코드 한 파일로 묶기 (선택: gitingest)
-Claude Code 밖(claude.ai 웹 채팅, 다른 AI)에 앱 코드를 통째로 보여 주고 물어볼 때. Claude Code 안에서는 필요 없습니다(직접 읽음). PC 에 한 번만 설치합니다(Python 필요):
-```powershell
-python -m pip install --user gitingest
-```
-쓰기: 앱 폴더에서 `gitingest .` → `digest.txt` 한 파일에 폴더 구조·코드·토큰 수가 담깁니다. `.gitignore` 에 적힌 파일(.env 등)은 빠지고, `digest.txt` 도 GitHub 에 올라가지 않습니다(.gitignore).
-- **웹사이트 방식(주소의 hub → ingest)은 쓰지 않습니다** — 코드가 외부 서버로 갑니다. 공개 저장소라도 PC 의 로컬 명령만 씁니다.
-- 붙여 넣기 전에 `digest.txt` 에 회원 자료·비밀키가 없는지 훑어봅니다.
-
 ### 토큰 아끼기 (사용량 한도 덜 쓰기)
 AI 는 대화가 길수록 앞 내용을 매번 다시 읽어서 같은 질문도 점점 비싸집니다.
 | 언제 | 할 일 | 효과 |
