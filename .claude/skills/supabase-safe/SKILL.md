@@ -37,9 +37,12 @@ RLS 를 켜지 않은 테이블은 anon 키로 누구나 읽을 수 있다. 배�
 - 업로드 전 `camera-photo` 스킬로 1600px 축소.
 
 ## 로그인
-- 이메일+비밀번호 기본. 소셜(Google/Kakao) 은 Supabase 대시보드에서 켠 뒤 `signInWithOAuth`.
-- 로그인 상태는 `onAuthStateChange` 로 감지해 `render()`.
-- 비밀번호 재설정 링크의 redirect 는 GitHub Pages 주소로 등록.
+소셜 로그인·인증 메일·계정 삭제는 `login-account` 스킬, 유료 구독은 `play-subscription` 스킬.
+
+## 운영 (출시 뒤)
+- **일시정지 방지**: 무료 플랜은 7일 동안 접속이 없으면 프로젝트를 멈춘다 → GitHub Actions 로 매일 한 번 **공개(anon) 키로** 가벼운 조회(`/rest/v1/표?select=id&limit=1`, RLS 때문에 빈 결과). 비밀키는 쓰지 않는다.
+- **고객 문의**: 국외 폼 서비스 대신 앱 서버 표에 받는다. 저장은 로그인 본인만·하루 N건 제한 함수(`security definer`)로, 앱은 읽지 못하고 운영자가 대시보드에서 본다. 보관 기간을 정해 `pg_cron` 으로 지운다. 로그인 안 됨·오프라인일 때만 메일 앱.
+- **AI 기능**: AI API 키는 서버 함수 Secrets 에만, 앱은 함수를 부른다. 회원 이름·연락처는 보내지 않는다(측정값·임의 코드만).
 
 ## 기기 데이터 → 서버 이전 (첫 로그인 때)
 1. IndexedDB 의 회원·측정·사진을 읽는다.

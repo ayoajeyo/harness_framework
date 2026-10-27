@@ -42,7 +42,7 @@ self.addEventListener("fetch", e => {
 2. 다운로드한 zip 의 `assetlinks.json` 을 **도메인 맨 위** `.well-known/assetlinks.json` 에 올린다 → 주소창 없이 열림. 앱 주소가 `아이디.github.io/앱이름/` 이면 앱 저장소가 아니라 **`아이디.github.io` 저장소**에 넣고, 그 저장소 `_config.yml` 에 `include: [".well-known"]`(점 폴더는 GitHub Pages 가 숨김).
 3. Play Console: 앱 만들기 → 내부 테스트 → `.aab` 업로드 → 스토어 등록정보(RELEASE.md 4번) → 데이터 안전(DATA.md 기준) → 개인정보처리방침 URL.
 4. 다음 업데이트: 웹만 바꾸면 **앱 재업로드 불필요**(TWA 는 웹을 보여 줌). 아이콘·이름·패키지 변경 때만 `.aab` 재생성 + `versionCode` +1.
-5. 결제(구독)는 Play Billing — TWA 에서는 Digital Goods API 필요. 별도 ADR 로 결정.
+5. 결제(구독)는 Play Billing — TWA 에서는 Digital Goods API 필요. 만드는 법은 `play-subscription` 스킬, 결정은 별도 ADR.
 
 ## 정식 출시 2~3주 전: 검색에 알리기
 검색 반영에 한 달쯤 걸린다. 출시 전 화면·정하지 않은 요금이 검색에 걸리지 않게 **너무 일찍 하지 않는다.**
