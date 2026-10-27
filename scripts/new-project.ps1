@@ -32,6 +32,38 @@ Get-ChildItem -Path $dest -Recurse -Force -Directory |
     Where-Object { $_.Name -in @("__pycache__", ".pytest_cache") } |
     Remove-Item -Recurse -Force
 
+# 틀 자체에만 쓰는 것은 새 앱에 넘기지 않는다: 이 PC 권한 설정(push 허용 등), 틀의 계획서, 틀의 인수인계
+Remove-Item (Join-Path $dest ".claude\settings.local.json") -Force -ErrorAction SilentlyContinue
+Get-ChildItem (Join-Path $dest "docs\PLANS") -Filter "20*.md" -ErrorAction SilentlyContinue | Remove-Item -Force
+$blankHandoff = @'
+# 인수인계 (HANDOFF)
+
+> `/handoff` 가 쓰는 문서. 대화를 새로 시작하거나 다른 PC 로 옮길 때 **이 문서 한 장**으로 이어간다 (긴 대화를 다시 읽지 않아 토큰을 아낌).
+> 항상 **최신 상태 하나만** 둔다. 지난 기록은 CHANGELOG·docs/PLANS·git log 에 있다. 회원 실명·연락처는 쓰지 않는다.
+
+상태: 없음
+갱신: -
+
+## 지금 하던 일
+(없음)
+
+## 다음 할 일 (순서대로, 바로 입력할 명령 포함)
+1. (없음)
+
+## 이번에 끝낸 것
+- (없음)
+
+## 정해진 것 / 결정 대기
+- (없음)
+
+## 주의할 점
+- (없음)
+
+## 관련 파일
+- (없음)
+'@
+[IO.File]::WriteAllText((Join-Path $dest "docs\HANDOFF.md"), $blankHandoff + "`n", (New-Object Text.UTF8Encoding $false))
+
 git -C $dest init -b main
 if ($LASTEXITCODE -ne 0) {
     # 오래된 git 은 -b 를 모른다
